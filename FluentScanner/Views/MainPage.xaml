@@ -4,20 +4,119 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ctkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
-    <Grid x:Name="ContentArea" Margin="{StaticResource MediumLeftRightMargin}">
+    <Grid x:Name="ContentArea"
+          Background="{ThemeResource SystemControlAcrylicWindowBrush}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="48" />
+            <RowDefinition Height="32" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid
-            Grid.Row="1" 
-            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}">
-            <!--
-                The SystemControlPageBackgroundChromeLowBrush background represents where you should place your content. 
-                Place your content here.
-            -->
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="360" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Titlebar -->
+        <StackPanel Grid.Row="0"
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Canvas.ZIndex="1000"
+                    Orientation="Horizontal">
+            <Image x:Name="imgAppIcon"
+                   Height="16"
+                   Width="16"
+                   Margin="16,0"
+                   Source="ms-appx:///Assets/Logo/Square44x44Logo.altform-unplated_targetsize-256.png" />
+            <TextBlock x:Uid="Main_AppDisplayName"
+                       Text="Scanning"
+                       Style="{ThemeResource CaptionTextBlockStyle}"
+                       Margin="0,0,12,0"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Scanner options -->
+        <Grid Grid.Row="1"
+              Grid.Column="0">
+            <!-- No scanner selected -->
+
+            
+            <!-- Scanner Options -->
+            <StackPanel Orientation="Vertical"
+                        Margin="24">
+                <!-- Scanner -->
+                <ComboBox x:Name="cmbxScanner"
+                          Header="Scanner" />
+
+                <!-- Image format -->
+                <ComboBox x:Name="cmbxImageFormat"
+                          Header="ImageFormat">
+                    
+                </ComboBox>
+                
+            </StackPanel>
+
+
+            <!-- Flying CommandBar -->
+            <ctkc:DropShadowPanel Canvas.ZIndex="100"
+                                 BlurRadius="10.0"
+                                 ShadowOpacity="0.30"
+                                 Color="Black"
+                                 OffsetX="4"
+                                 OffsetY="4"
+                                 Margin="24"
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Bottom">
+                <CommandBar DefaultLabelPosition="Right"
+                            CornerRadius="2"
+                            Style="{ThemeResource CommandBarRevealStyle}">
+                    <CommandBar.PrimaryCommands>
+                        <AppBarButton Icon="Scan"
+                                      Label="New scan"
+                                      Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                      Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
+                                      FontWeight="SemiBold"
+                                      CornerRadius="2,0,0,2"
+                                      ToolTipService.ToolTip="New scan"/>
+                    </CommandBar.PrimaryCommands>
+                    <CommandBar.SecondaryCommands>
+                        <AppBarButton Icon="Setting"
+                                      Label="Settings"/>
+                        <AppBarButton Label="About">
+                            <AppBarButton.Icon>
+                                <FontIcon Glyph="&#xE946;"/>
+                            </AppBarButton.Icon>
+                        </AppBarButton>
+                    </CommandBar.SecondaryCommands>
+                </CommandBar>
+            </ctkc:DropShadowPanel>
+
+
+
         </Grid>
+
+        <!-- Document details -->
+        <!-- KEEP IN MIND! - Let the contents have at least 32px of padding, due to the titlebar! -->
+        <ctkc:DropShadowPanel Grid.Row="1"
+                              Grid.RowSpan="2"
+                              Grid.Column="1"
+                              Canvas.ZIndex="100"
+                              BlurRadius="10.0"
+                              ShadowOpacity="0.30"
+                              Color="Black"
+                              OffsetX="-4"
+                              OffsetY="-4"                              
+                              HorizontalAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch">
+            <!-- Content -->
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                  Padding="24">
+                <TextBlock Text="Lol quality content"
+                           Style="{ThemeResource FluentHeaderTextStyle}"/>
+            </Grid>
+        </ctkc:DropShadowPanel>
+
+        
     </Grid>
 </Page>

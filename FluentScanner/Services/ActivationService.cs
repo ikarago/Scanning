@@ -7,7 +7,10 @@ using FluentScanner.Activation;
 using FluentScanner.Core.Helpers;
 
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.System;
+using Windows.UI;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -68,6 +71,10 @@ namespace FluentScanner.Services
                 {
                     await Singleton<SuspendAndResumeService>.Instance.RestoreSuspendAndResumeData();
                 }
+
+                // Set custom stuff
+                SetTitlebar();
+                SetMinimalWindowSize();
 
                 // Ensure the current window is active
                 Window.Current.Activate();
@@ -134,6 +141,32 @@ namespace FluentScanner.Services
         private bool IsInteractive(object args)
         {
             return args is IActivatedEventArgs;
+        }
+
+        private void SetTitlebar()
+        {
+            // Make the buttons transparent
+            ApplicationViewTitleBar titlebar = ApplicationView.GetForCurrentView().TitleBar;
+            titlebar.ButtonBackgroundColor = Colors.Transparent;
+            titlebar.ButtonInactiveBackgroundColor = Colors.Transparent;
+
+            if (App.Current.RequestedTheme == ApplicationTheme.Dark)
+            {
+                titlebar.ButtonForegroundColor = Colors.White;
+            }
+            else if (App.Current.RequestedTheme == ApplicationTheme.Light)
+            {
+                titlebar.ButtonForegroundColor = Colors.Black;
+            }
+
+            // Extend the normal window to the Titlebar for the blur to reach there too
+            CoreApplicationViewTitleBar coreTitlebar = CoreApplication.GetCurrentView().TitleBar;
+            coreTitlebar.ExtendViewIntoTitleBar = true;
+        }
+
+        private void SetMinimalWindowSize()
+        {
+            ApplicationView.GetForCurrentView().SetPreferredMinSize(new Windows.Foundation.Size(400, 300));
         }
     }
 }

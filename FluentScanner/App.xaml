@@ -2,7 +2,9 @@
     x:Class="FluentScanner.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    RequestedTheme="Light"
     >
+    <!-- Requested Theme temp set for easy desbugging shadows -->
 
     <Application.Resources>
         <ResourceDictionary>
