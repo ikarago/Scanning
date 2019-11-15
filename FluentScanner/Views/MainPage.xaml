@@ -82,8 +82,10 @@
                     </CommandBar.PrimaryCommands>
                     <CommandBar.SecondaryCommands>
                         <AppBarButton Icon="Setting"
-                                      Label="Settings"/>
-                        <AppBarButton Label="About">
+                                      Label="Settings"
+                                      Command="{x:Bind ViewModel.SettingsCommand}"/>
+                        <AppBarButton Label="About"
+                                      Command="{x:Bind ViewModel.AboutCommand}">
                             <AppBarButton.Icon>
                                 <FontIcon Glyph="&#xE946;"/>
                             </AppBarButton.Icon>
@@ -105,13 +107,16 @@
                               BlurRadius="10.0"
                               ShadowOpacity="0.30"
                               Color="Black"
-                              OffsetX="-4"
-                              OffsetY="-4"                              
+                              OffsetX="0"
+                              OffsetY="0"                              
                               HorizontalAlignment="Stretch"
                               HorizontalContentAlignment="Stretch">
             <!-- Content -->
             <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
                   Padding="24">
+                <Grid.BackgroundTransition>
+                    <BrushTransition />
+                </Grid.BackgroundTransition>
                 <TextBlock Text="Lol quality content"
                            Style="{ThemeResource FluentHeaderTextStyle}"/>
             </Grid>
