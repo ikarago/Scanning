@@ -7,13 +7,20 @@
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="/Styles/_Colors.xaml" />
-                <ResourceDictionary Source="/Styles/_FontSizes.xaml" />
-                <ResourceDictionary Source="/Styles/_Thickness.xaml" />
+                <!-- Frameworks -->
+                <XamlControlsResources xmlns="using:Microsoft.UI.Xaml.Controls" />
+                <FluiFrameworkThemeResources xmlns="using:FluiFramework.UWP.Core" />
 
-                <ResourceDictionary Source="/Styles/TextBlock.xaml" />
-                <ResourceDictionary Source="/Styles/CommandBar.xaml"/>
-                <ResourceDictionary Source="/Styles/Page.xaml"/>
+
+                <!-- Local Stylesheets -->
+                <ResourceDictionary Source="/Styles/_Colors.xaml"/>
+                <!--<ResourceDictionary Source="/Styles/_Corners.xaml"/>-->
+                <ResourceDictionary Source="/Styles/_FontSizes.xaml"/>
+                <ResourceDictionary Source="/Styles/_Thickness.xaml"/>
+
+                <!--<ResourceDictionary Source="/Styles/TextBlock.xaml"/>-->
+                <!--<ResourceDictionary Source="/Styles/TextBox.xaml" />-->
+                <!--<ResourceDictionary Source="/Styles/Page.xaml"/>-->
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
