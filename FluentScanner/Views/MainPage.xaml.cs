@@ -59,7 +59,7 @@ namespace FluentScanner.Views
         {
             selectedDevice = (DeviceInformation)cmbxScanner.SelectedItem;
             selectedScanner = await ImageScanner.FromIdAsync(selectedDevice.Id);
-            scannerSources = ScannerHelper.GetAvailableScanSources(selectedScanner);
+            scannerSources = ScannerHelper.GetSupportedScanSources(selectedScanner);
             cmbxScannerSource.ItemsSource = scannerSources;
         }
 
@@ -179,7 +179,7 @@ namespace FluentScanner.Views
 
         private void GetAllAvailableSettingsForCurrentScannerSource()
         {
-            sourceFormats = ScannerHelper.GetAvailableImageFormats(selectedScanner, selectedScannerSource);
+            sourceFormats = ScannerHelper.GetSupportedImageFormats(selectedScanner, selectedScannerSource);
             cmbxImageFormat.ItemsSource = sourceFormats;
         }
 

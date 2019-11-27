@@ -18,7 +18,7 @@ namespace FluentScanner.Helpers
         /// </summary>
         /// <param name="scanner"></param>
         /// <returns>List with all available ImageScannerScanSources for the given scanner</returns>
-        public static List<ImageScannerScanSource> GetAvailableScanSources(ImageScanner scanner)
+        public static List<ImageScannerScanSource> GetSupportedScanSources(ImageScanner scanner)
         {
             List<ImageScannerScanSource> availableScanSources = new List<ImageScannerScanSource>();
 
@@ -43,7 +43,7 @@ namespace FluentScanner.Helpers
         /// <param name="scanner"></param>
         /// <param name="source">0 = Flatbed, 1 = Feeder, 2 = AutoConfiguration</param>
         /// <returns>List with all available ImageScannerFormats for the given source</returns>
-        public static List<ImageScannerFormat> GetAvailableImageFormats(ImageScanner scanner, ImageScannerScanSource source)
+        public static List<ImageScannerFormat> GetSupportedImageFormats(ImageScanner scanner, ImageScannerScanSource source)
         {
             List<ImageScannerFormat> availableFormats = new List<ImageScannerFormat>();
 
