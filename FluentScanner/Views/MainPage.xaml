@@ -72,7 +72,14 @@
                 <!-- Image format -->
                 <ComboBox x:Name="cmbxImageFormat"
                           Header="ImageFormat"
-                          ItemsSource="{x:Bind sourceFormats, Mode=OneWay}">
+                          ItemsSource="{x:Bind sourceFormats, Mode=OneWay}"
+                          SelectionChanged="cmbxImageFormat_SelectionChanged">
+                    
+                </ComboBox>
+
+                <!-- Colour Mode -->
+                <ComboBox x:Name="cmbxColourMode"
+                          Header="Colour">
                     
                 </ComboBox>
 

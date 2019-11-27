@@ -93,7 +93,9 @@ namespace FluentScanner.Views
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
             {
                 Debug.WriteLine("MainPage - Removing Scanner...");
-                foreach (var item in scannerCollection)
+                // Create a temporary collection to enumerate through
+                var tempCollection = scannerCollection;
+                foreach (var item in tempCollection)
                 {
                     if (args.Id == item.Id)
                     {
@@ -132,6 +134,44 @@ namespace FluentScanner.Views
             
         }
 
+        private async void ScanWithSetSettings()
+        {
+            // #TODO: Find the proper moment to clear the temp folder to avoid overflowing it with data
+            StorageFolder tempFolder = Windows.Storage.ApplicationData.Current.TemporaryFolder;
+
+            // Scan the data
+            var result = await selectedScanner.ScanFilesToFolderAsync(selectedScannerSource, tempFolder);
+
+
+            //switch (selectedScannerSource)
+            //{
+            //    case ImageScannerScanSource.AutoConfigured:
+            //        {
+            //            // Set the custom settings
+            //            selectedScanner.AutoConfiguration.Format = selectedScannerFormat;
+            //            // #TODO Colour Mode
+            //            // #TODO DPI
+            //            break;
+            //        }
+            //    case ImageScannerScanSource.Flatbed:
+            //        {
+            //            // Set the custom settings
+            //            selectedScanner.FlatbedConfiguration.Format = selectedScannerFormat;
+            //            // #TODO Colour Mode
+            //            // #TODO DPI
+            //            break;
+            //        }
+            //    case ImageScannerScanSource.Feeder:
+            //        {
+            //            // Set the custom settings
+            //            selectedScanner.FeederConfiguration.Format = selectedScannerFormat;
+            //            // #TODO Colour Mode
+            //            // #TODO DPI
+            //            break;
+            //        }
+            //}
+        }
+
         // 1 - Get scanners
         // 2 - Get available sources
         // 3 - Once selected, get all available options
@@ -151,7 +191,31 @@ namespace FluentScanner.Views
 
         private void AppBarButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            ScanWithDefaultSettings();
+            ScanWithSetSettings();
+        }
+
+        private void cmbxImageFormat_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            switch (selectedScannerSource)
+            {
+                case ImageScannerScanSource.AutoConfigured:
+                    {
+                        selectedScanner.AutoConfiguration.Format = (ImageScannerFormat)cmbxImageFormat.SelectedItem;
+                        break;
+                    }
+                case ImageScannerScanSource.Flatbed:
+                    {
+                        selectedScanner.FlatbedConfiguration.Format = (ImageScannerFormat)cmbxImageFormat.SelectedItem;
+                        break;
+                    }
+                case ImageScannerScanSource.Feeder:
+                    {
+                        selectedScanner.FeederConfiguration.Format = (ImageScannerFormat)cmbxImageFormat.SelectedItem;
+                        break;
+                    }
+
+
+            }
         }
     }
 }

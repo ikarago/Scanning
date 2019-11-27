@@ -13,6 +13,12 @@ namespace FluentScanner.ViewModels
         // Constructor
         public MainViewModel()
         {
+            Initialize();
+        }
+        // Initialize
+        private void Initialize()
+        {
+
         }
 
 
