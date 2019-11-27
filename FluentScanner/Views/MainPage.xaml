@@ -5,6 +5,8 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:ctkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:enumeration="using:Windows.Devices.Enumeration"
+    xmlns:scanners="using:Windows.Devices.Scanners"
     mc:Ignorable="d">
     <Grid x:Name="ContentArea"
           Background="{ThemeResource SystemControlAcrylicWindowBrush}">
@@ -45,13 +47,39 @@
             <!-- Scanner Options -->
             <StackPanel Orientation="Vertical"
                         Margin="24">
+                <Button x:Name="btnLoadScanners"
+                        Content="Load scanners"
+                        Click="btnLoadScanners_Click" />
                 <!-- Scanner -->
                 <ComboBox x:Name="cmbxScanner"
-                          Header="Scanner" />
+                          Header="Scanner"
+                          ItemsSource="{x:Bind scannerCollection, Mode=OneWay}"
+                          SelectionChanged="cmbxScanner_SelectionChanged">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="enumeration:DeviceInformation">
+                            <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+                <!-- Scanner Source -->
+                <ComboBox x:Name="cmbxScannerSource"
+                          Header="Source"
+                          ItemsSource="{x:Bind scannerSources,Mode=OneWay}"
+                          SelectionChanged="cmbxScannerSource_SelectionChanged">
+                </ComboBox>
 
                 <!-- Image format -->
                 <ComboBox x:Name="cmbxImageFormat"
-                          Header="ImageFormat">
+                          Header="ImageFormat"
+                          ItemsSource="{x:Bind sourceFormats, Mode=OneWay}">
+                    
+                </ComboBox>
+
+                <!-- Resolution (DPI) -->
+                <ComboBox x:Name="cmbxResolution"
+                          Header="Resolution (DPI)"
+                          >
                     
                 </ComboBox>
                 
@@ -78,7 +106,8 @@
                                       Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
                                       FontWeight="SemiBold"
                                       CornerRadius="2,0,0,2"
-                                      ToolTipService.ToolTip="New scan"/>
+                                      ToolTipService.ToolTip="New scan"
+                                      Click="AppBarButton_Click"/>
                     </CommandBar.PrimaryCommands>
                     <CommandBar.SecondaryCommands>
                         <AppBarButton Icon="Setting"
