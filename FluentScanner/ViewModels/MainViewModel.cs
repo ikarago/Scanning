@@ -7,6 +7,7 @@ using FluentScanner.Helpers;
 using FluentScanner.Views.Dialogs;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
+using Windows.Storage;
 using Windows.UI.Core;
 
 namespace FluentScanner.ViewModels
@@ -14,8 +15,6 @@ namespace FluentScanner.ViewModels
     public class MainViewModel : Observable
     {
         // Properties
-        public CoreDispatcher Dispatcher;
-
         private DeviceWatcher _scannerWatcher;
 
         // Scanners
@@ -51,7 +50,7 @@ namespace FluentScanner.ViewModels
             set
             {
                 Set(ref _selectedScannerSource, value);
-                UpdateScannerSourceProperties();
+                GetSelectedScannerSourceProperties();
             }
         }
 
@@ -91,6 +90,24 @@ namespace FluentScanner.ViewModels
             }
         }
 
+        // Auto-Cropping
+        private List<ImageScannerAutoCroppingMode> _scannerAutoCroppingModes;
+        public List<ImageScannerAutoCroppingMode> ScannerAutoCropppingModes
+        {
+            get { return _scannerAutoCroppingModes; }
+            set { Set(ref _scannerAutoCroppingModes, value); }
+        }
+        private ImageScannerAutoCroppingMode _selectedScannerAutoCroppingMode;
+        public ImageScannerAutoCroppingMode SelectedScannerAutoCroppingMode
+        {
+            get { return _selectedScannerAutoCroppingMode; }
+            set
+            {
+                Set(ref _selectedScannerAutoCroppingMode, value);
+                UpdateSelectedScannerSourceProperties();
+            }
+        }
+
         // Resolution (DPI)
 
 
@@ -104,16 +121,19 @@ namespace FluentScanner.ViewModels
         // Constructor
         public MainViewModel()
         {
-            // Get the dispatcher from the UI in case the UI is going to be a cunt again when adding and removing stuff from the collections
-            //Dispatcher = dispatcher;
             Initialize();
         }
         // Initialize
         private void Initialize()
         {
+            // Initialize properties
+            ScannerSources = new List<ImageScannerScanSource>();
+            ScannerFormats = new List<ImageScannerFormat>();
+            ScannerColourModes = new List<ImageScannerColorMode>();
+            ScannerAutoCropppingModes = new List<ImageScannerAutoCroppingMode>();
 
 
-
+            // Start device watchers
             InitializeDeviceWatcher();
             StartDeviceWatcher();
         }
@@ -140,7 +160,7 @@ namespace FluentScanner.ViewModels
                     _newScanCommand = new RelayCommand(
                         () =>
                         {
-                            // #TODO
+                            ScanWithCustomSettings();
                         });
                 }
                 return _newScanCommand;
@@ -203,42 +223,34 @@ namespace FluentScanner.ViewModels
 
 
         // Methodes
+        // Device Watcher
+        private void OnScannerAdded(DeviceWatcher sender, DeviceInformation args)
+        {
+            Debug.WriteLine("MainViewModel - Adding Scanner...");
+            if (!ScannerCollection.Contains(args))
+            {
+                ScannerCollection.Add(args);
+            }
+            Debug.WriteLine("MainViewModel - Adding Scanner... Done! :)");
+        }
+
+        private void OnScannerRemoved(DeviceWatcher sender, DeviceInformationUpdate args)
+        {
+            Debug.WriteLine("MainViewModel - Removing Scanner...");
+            // Create a temporary collection to enumerate through
+            var tempCollection = ScannerCollection;
+            foreach (var item in tempCollection)
+            {
+                if (args.Id == item.Id)
+                {
+                    ScannerCollection.Remove(item);
+                }
+            }
+            Debug.WriteLine("MainViewModel - Removing Scanner... Done! :)");
+        }
+
         private void OnScannerEnumerationCompleted(DeviceWatcher sender, object args)
         {
-
-        }
-
-        private async void OnScannerRemoved(DeviceWatcher sender, DeviceInformationUpdate args)
-        {
-            //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
-            //{
-                Debug.WriteLine("MainViewModel - Removing Scanner...");
-                // Create a temporary collection to enumerate through
-                var tempCollection = ScannerCollection;
-                foreach (var item in tempCollection)
-                {
-                    if (args.Id == item.Id)
-                    {
-                        ScannerCollection.Remove(item);
-                    }
-                }
-                Debug.WriteLine("MainViewModel - Removing Scanner... Done! :)");
-            //});
-
-        }
-
-        // Run the update on the UI thread, as it's bound there
-        private async void OnScannerAdded(DeviceWatcher sender, DeviceInformation args)
-        {
-            //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Low, () =>
-            //{
-                Debug.WriteLine("MainViewModel - Adding Scanner...");
-                if (!ScannerCollection.Contains(args))
-                {
-                    ScannerCollection.Add(args);
-                }
-                Debug.WriteLine("MainViewModel - Adding Scanner... Done! :)");
-            //});
 
         }
 
@@ -253,28 +265,35 @@ namespace FluentScanner.ViewModels
         }
 
 
+        // Update methods
         private async void UpdateScannerInfo()
         {
-            SelectedScanner = await ImageScanner.FromIdAsync(SelectedDevice.Id);
+            SelectedScanner = await ImageScanner.FromIdAsync(_selectedDevice.Id);
             ScannerSources = ScannerHelper.GetSupportedScanSources(SelectedScanner);
             // #TODO Set the default properties
         }
 
-        private void UpdateScannerSourceProperties()
+        /// <summary>
+        /// Updates all the Lists containing the properties for the selected Scanner Source
+        /// </summary>
+        private void GetSelectedScannerSourceProperties()
         {
-            // #TODO Get the properties and set the defaults as the default selected option
+            // Get all supported options for the selected scanning source
+            ScannerFormats.Clear();
             ScannerFormats = ScannerHelper.GetSupportedImageFormats(SelectedScanner, SelectedScannerSource);
-            // #TODO Build a set for the colour modes
+            ScannerColourModes.Clear();
+            ScannerColourModes = ScannerHelper.GetSupportedColourModes(SelectedScanner, SelectedScannerSource);
+            ScannerAutoCropppingModes.Clear();
+            ScannerAutoCropppingModes = ScannerHelper.GetSupportedAutoCroppingModes(SelectedScanner, SelectedScannerSource);
+            // #TODO Build this for DPI
 
-            //switch (SelectedScannerSource)
-            //{
-            //    case ImageScannerScanSource.AutoConfigured:
-            //        {
-            //            // #TODO Test this?
-            //            SelectedScannerFormat = SelectedScanner.AutoConfiguration.DefaultFormat;
-            //            break;
-            //        }
-            //}
+            // #TODO Select Defaults
+            // Set defaults in _properyName to avoid triggering the UpdateSelectedScannerSourceProperties()-method
+            
+
+
+            // #TODO Update Visibility statusses
+
 
         }
 
@@ -287,7 +306,53 @@ namespace FluentScanner.ViewModels
 
         }
 
+        private void SetScannerPropertiesForScanning()
+        {
+            
+            switch (SelectedScannerSource)
+            {
+                case ImageScannerScanSource.Flatbed:
+                {
+                        // #TODO Find out why VS auto tabs this too far.
+                        // #TODO Add in exception catchers
+                    SelectedScanner.FlatbedConfiguration.Format = SelectedScannerFormat;
+                    SelectedScanner.FlatbedConfiguration.ColorMode = SelectedScannerColourMode;
+                        //if (SelectedScannerAutoCroppingMode != null)
+                        //{   SelectedScanner.FlatbedConfiguration.AutoCroppingMode = SelectedScannerAutoCroppingMode; }
+                        break;
+                }
+                case ImageScannerScanSource.Feeder:
+                {
+                    SelectedScanner.FeederConfiguration.Format = SelectedScannerFormat;
+                    SelectedScanner.FeederConfiguration.ColorMode = SelectedScannerColourMode;
+                    //SelectedScanner.FeederConfiguration.AutoCroppingMode = SelectedScannerAutoCroppingMode;
+                    break;
+                }
+                case ImageScannerScanSource.AutoConfigured:
+                {
+                    SelectedScanner.FeederConfiguration.Format = SelectedScannerFormat;
+                    break;
+                }
+                case ImageScannerScanSource.Default:
+                {
+                    break;
+                }
+            }
+        }
 
+        private async void ScanWithCustomSettings()
+        {
+            SetScannerPropertiesForScanning();
+            // #TODO: Find the proper moment to clear the temp folder to avoid overflowing it with data
+            StorageFolder tempFolder = Windows.Storage.ApplicationData.Current.TemporaryFolder;
+
+            // Scan the data
+            // #TODO Allow for cancelling the task
+            var result = await SelectedScanner.ScanFilesToFolderAsync(SelectedScannerSource, tempFolder);
+
+            // #TODO Show the picture in the details side with Windows Ink
+
+        }
 
 
 

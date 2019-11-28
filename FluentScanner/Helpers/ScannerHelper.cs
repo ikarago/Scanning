@@ -25,7 +25,13 @@ namespace FluentScanner.Helpers
             foreach (ImageScannerScanSource scanSource in (ImageScannerScanSource[]) Enum.GetValues(typeof(ImageScannerScanSource)))
             {
                 if (scanner.IsScanSourceSupported(scanSource))
-                { availableScanSources.Add(scanSource); }
+                {
+                    if (scanSource != ImageScannerScanSource.Default)   // Disabling Default as it'll only be used for getting preferences from
+                    {
+                        availableScanSources.Add(scanSource);
+
+                    }
+                }
             }
 
             return availableScanSources;
@@ -41,7 +47,7 @@ namespace FluentScanner.Helpers
         /// Gets all available Image Formats for a Scan Source
         /// </summary>
         /// <param name="scanner"></param>
-        /// <param name="source">0 = Flatbed, 1 = Feeder, 2 = AutoConfiguration</param>
+        /// <param name="source"></param>
         /// <returns>List with all available ImageScannerFormats for the given source</returns>
         public static List<ImageScannerFormat> GetSupportedImageFormats(ImageScanner scanner, ImageScannerScanSource source)
         {
@@ -76,12 +82,105 @@ namespace FluentScanner.Helpers
                         }
                         break;
                     }
+                case ImageScannerScanSource.Default:    // Catch the otherwise empty set by only providing Bitmap as option, as this is device independant
+                    {
+                        availableFormats.Add(ImageScannerFormat.DeviceIndependentBitmap);
+                        break;
+                    }
             }
 
             return availableFormats;
         }
 
 
+        /// <summary>
+        /// Gets all available Colour Modes for a Scan Source
+        /// </summary>
+        /// <param name="scanner"></param>
+        /// <param name="source"></param>
+        /// <returns>List with all available ImageScannerColorMode for the given source</returns>
+        public static List<ImageScannerColorMode> GetSupportedColourModes(ImageScanner scanner, ImageScannerScanSource source)
+        {
+            List<ImageScannerColorMode> availableColorModes = new List<ImageScannerColorMode>();
 
+            switch (source)
+            {
+                case ImageScannerScanSource.Flatbed: // Flatbed
+                    {
+                        foreach (ImageScannerColorMode colourMode in (ImageScannerColorMode[])Enum.GetValues(typeof(ImageScannerColorMode)))
+                        {
+                            if (scanner.FlatbedConfiguration.IsColorModeSupported(colourMode))
+                            { availableColorModes.Add(colourMode); }
+                        }
+                        break;
+                    }
+                case ImageScannerScanSource.Feeder: // Feeder
+                    {
+                        foreach (ImageScannerColorMode colourMode in (ImageScannerColorMode[])Enum.GetValues(typeof(ImageScannerColorMode)))
+                        {
+                            if (scanner.FeederConfiguration.IsColorModeSupported(colourMode))
+                            { availableColorModes.Add(colourMode); }
+                        }
+                        break;
+                    }
+                case ImageScannerScanSource.AutoConfigured: // Auto Configured
+                    {
+                        // Not possible, return empty List
+                        break;
+                    }
+                case ImageScannerScanSource.Default:    // Catch the otherwise empty set by only providing Bitmap as option, as this is device independant
+                    {
+                        // Not possible, return empty List
+                        break;
+                    }
+            }
+
+            return availableColorModes;
+        }
+
+        /// <summary>
+        /// Gets all available Colour Modes for a Scan Source
+        /// </summary>
+        /// <param name="scanner"></param>
+        /// <param name="source"></param>
+        /// <returns>List with all available ImageScannerColorMode for the given source</returns>
+        public static List<ImageScannerAutoCroppingMode> GetSupportedAutoCroppingModes(ImageScanner scanner, ImageScannerScanSource source)
+        {
+            List<ImageScannerAutoCroppingMode> availableAutoCroppingModes = new List<ImageScannerAutoCroppingMode>();
+
+            switch (source)
+            {
+                case ImageScannerScanSource.Flatbed: // Flatbed
+                    {
+                        foreach (ImageScannerAutoCroppingMode autoCroppingMode in (ImageScannerAutoCroppingMode[])Enum.GetValues(typeof(ImageScannerAutoCroppingMode)))
+                        {
+                            if (scanner.FlatbedConfiguration.IsAutoCroppingModeSupported(autoCroppingMode))
+                            { availableAutoCroppingModes.Add(autoCroppingMode); }
+                        }
+                        break;
+                    }
+                case ImageScannerScanSource.Feeder: // Feeder
+                    {
+                        foreach (ImageScannerAutoCroppingMode autoCroppingMode in (ImageScannerAutoCroppingMode[])Enum.GetValues(typeof(ImageScannerAutoCroppingMode)))
+                        {
+                            if (scanner.FeederConfiguration.IsAutoCroppingModeSupported(autoCroppingMode))
+                            { availableAutoCroppingModes.Add(autoCroppingMode); }
+                        }
+                        break;
+                    }
+                case ImageScannerScanSource.AutoConfigured: // Auto Configured
+                    {
+                        // Not possible, return empty List
+                        break;
+                    }
+                case ImageScannerScanSource.Default:    // Catch the otherwise empty set by only providing Bitmap as option, as this is device independant
+                    {
+                        // Not possible, return empty List
+                        break;
+                    }
+            }
+
+            return availableAutoCroppingModes;
+        }
     }
 }
