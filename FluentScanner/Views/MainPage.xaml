@@ -147,13 +147,15 @@
                               BlurRadius="10.0"
                               ShadowOpacity="0.30"
                               Color="Black"
-                              OffsetX="0"
-                              OffsetY="0"                              
+                              OffsetX="4"
+                              OffsetY="4"
+                              Margin="8,0,8,8"
                               HorizontalAlignment="Stretch"
                               HorizontalContentAlignment="Stretch">
             <!-- Content -->
             <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}"
-                  CornerRadius="2,0,0,0">
+                  CornerRadius="2"
+                  Padding="4">
                 <Grid.BackgroundTransition>
                     <BrushTransition />
                 </Grid.BackgroundTransition>
@@ -175,7 +177,7 @@
                               Canvas.ZIndex="100"
                               BlurRadius="10.0"
                               ShadowOpacity="0.30"
-                                      Margin="12,0,12,12"
+                                      Margin="8,0,8,8"
                               Color="Black"
                               OffsetX="4"
                               OffsetY="4"                              
