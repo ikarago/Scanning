@@ -151,13 +151,92 @@
                               HorizontalAlignment="Stretch"
                               HorizontalContentAlignment="Stretch">
             <!-- Content -->
-            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                  Padding="24">
+            <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                  CornerRadius="2,0,0,0">
                 <Grid.BackgroundTransition>
                     <BrushTransition />
                 </Grid.BackgroundTransition>
-                <TextBlock Text="Lol quality content"
-                           Style="{ThemeResource FluentHeaderTextStyle}"/>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <!-- Top bar -->
+                <Grid>
+                    <Button Style="{ThemeResource FluentDialogButtonBackStyle}" />
+                    <InkToolbar HorizontalAlignment="Center"/>
+                </Grid>
+
+                <!-- Scanned Image -->
+                <ctkc:DropShadowPanel Grid.Row="1"
+                              Grid.RowSpan="2"
+                              Grid.Column="1"
+                              Canvas.ZIndex="100"
+                              BlurRadius="10.0"
+                              ShadowOpacity="0.30"
+                                      Margin="12,0,12,12"
+                              Color="Black"
+                              OffsetX="4"
+                              OffsetY="4"                              
+                              HorizontalAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch">
+                    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                          CornerRadius="2">
+                        <Image x:Name="imgScanned"
+                       Grid.Row="1"
+                       Source="/Assets/TestAssets/Scan_20191203_LI.jpg"
+                       Margin="24"/>
+
+                        <!-- Flying CommandBar -->
+                        <ctkc:DropShadowPanel Grid.Row="1"
+                                Canvas.ZIndex="100"
+                                 BlurRadius="10.0"
+                                 ShadowOpacity="0.30"
+                                 Color="Black"
+                                 OffsetX="4"
+                                 OffsetY="4"
+                                 Margin="12"
+                                 HorizontalAlignment="Right"
+                                 VerticalAlignment="Bottom">
+                            <CommandBar DefaultLabelPosition="Right"
+                                        CornerRadius="2"
+                                        Style="{ThemeResource CommandBarRevealStyle}">
+                                <CommandBar.PrimaryCommands>
+                                    <AppBarButton Icon="Save"
+                                      Label="Save"
+                                      Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                      Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
+                                      FontWeight="SemiBold"
+                                      CornerRadius="2,0,0,2"
+                                      ToolTipService.ToolTip="Save"/>
+                                    <AppBarButton Icon="Copy"
+                                                  Label="Copy"
+                                                  LabelPosition="Collapsed"
+                                                  ToolTipService.ToolTip="Copy" />
+                                    <AppBarButton Icon="Share"
+                                                  Label="Share"
+                                                  LabelPosition="Collapsed"
+                                                  ToolTipService.ToolTip="Share"
+                                                  CornerRadius="0,2,2,0">
+                                        <AppBarButton.Flyout>
+                                            <MenuFlyout>
+                                                <MenuFlyoutItem Text="Send to email" >
+                                                    <MenuFlyoutItem.Icon>
+                                                        <FontIcon Glyph="&#xE89C;"/>
+                                                    </MenuFlyoutItem.Icon>
+                                                </MenuFlyoutItem>
+                                                <MenuFlyoutItem Text="Share with other apps"
+                                                                Icon="Share" />
+                                            </MenuFlyout>
+                                        </AppBarButton.Flyout>
+                                    </AppBarButton>
+                                </CommandBar.PrimaryCommands>
+                            </CommandBar>
+                        </ctkc:DropShadowPanel>
+                    </Grid>
+                </ctkc:DropShadowPanel>
+
+
             </Grid>
         </ctkc:DropShadowPanel>
 
