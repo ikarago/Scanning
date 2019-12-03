@@ -7,8 +7,12 @@ using FluentScanner.Helpers;
 using FluentScanner.Views.Dialogs;
 using Windows.Devices.Enumeration;
 using Windows.Devices.Scanners;
+using Windows.Graphics.Imaging;
 using Windows.Storage;
+using Windows.Storage.Pickers;
+using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace FluentScanner.ViewModels
 {
@@ -115,6 +119,22 @@ namespace FluentScanner.ViewModels
         // UI Elements
 
 
+        // TEMP - Image for in Details
+        private StorageFile _imageFile;
+        public StorageFile ImageFile
+        {
+            get { return _imageFile; }
+            set { Set(ref _imageFile, value); }
+        }
+
+        private BitmapImage _scannedImage;
+        public BitmapImage ScannedImage
+        {
+            get { return _scannedImage; }
+            set { Set(ref _scannedImage, value); }
+        }
+
+
 
 
 
@@ -181,6 +201,23 @@ namespace FluentScanner.ViewModels
                         });
                 }
                 return _previewScanCommand;
+            }
+        }
+
+        private ICommand _saveEditedScanCommand;
+        public ICommand SaveEditedSaveCommand
+        {
+            get
+            {
+                if (_saveEditedScanCommand == null)
+                {
+                    _saveEditedScanCommand = new RelayCommand(
+                        () =>
+                        {
+                            SaveModifiedScan();
+                        });
+                }
+                return _saveEditedScanCommand;
             }
         }
 
@@ -350,11 +387,61 @@ namespace FluentScanner.ViewModels
             // #TODO Allow for cancelling the task
             var result = await SelectedScanner.ScanFilesToFolderAsync(SelectedScannerSource, tempFolder);
 
+            var listOfFiles = result.ScannedFiles;
+            ImageFile = listOfFiles[0];
             // #TODO Show the picture in the details side with Windows Ink
+            OpenScannedImageInDetails();
+        }
+
+        private async void OpenScannedImageInDetails()
+        {
+            // Get the image
+            try
+            {
+                ScannedImage = await ImageHelper.GetBitmapFromImageAsync(ImageFile);
+            }
+            catch { }
+            
+            // Check if it's an supported Image File
+
+            // Open it in the details
 
         }
 
+        private async void SaveModifiedScan()
+        {
+            FileSavePicker picker = new FileSavePicker();
+            picker.FileTypeChoices.Add("JPEG", new List<string>() { ".jpg" });
 
+            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+            picker.SuggestedFileName = ("Scan" + DateTime.Now.ToString());
+
+            StorageFile file = await picker.PickSaveFileAsync();
+            if (file != null)
+            {
+                // Get the software bitmap
+                SoftwareBitmap softwareBitmap;
+                using (IRandomAccessStream stream = await ImageFile.OpenAsync(FileAccessMode.Read))
+                {
+                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+                    softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+                }
+
+                // Write the software bitmap
+                using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+                {
+                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+                    encoder.SetSoftwareBitmap(softwareBitmap);
+                    encoder.IsThumbnailGenerated = true;
+
+                    try
+                    {
+                        await encoder.FlushAsync();
+                    }
+                    catch { }
+                }
+            }
+        }
 
 
         /// <summary>

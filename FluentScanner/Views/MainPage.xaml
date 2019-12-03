@@ -89,6 +89,7 @@
                 <!-- Resolution (DPI) -->
                 <ComboBox x:Name="cmbxResolution"
                           Header="Resolution (DPI)"
+                          Visibility="Collapsed"
                           >
                     
                 </ComboBox>
@@ -184,7 +185,7 @@
                           CornerRadius="2">
                         <Image x:Name="imgScanned"
                        Grid.Row="1"
-                       Source="/Assets/TestAssets/Scan_20191203_LI.jpg"
+                       Source="{x:Bind ViewModel.ScannedImage, Mode=OneWay}"
                        Margin="24"/>
 
                         <!-- Flying CommandBar -->
@@ -207,13 +208,16 @@
                                       Background="{ThemeResource SystemControlBackgroundAccentBrush}"
                                       Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
                                       FontWeight="SemiBold"
-                                      CornerRadius="2,0,0,2"
-                                      ToolTipService.ToolTip="Save"/>
+                                      CornerRadius="2"
+                                      ToolTipService.ToolTip="Save"
+                                                  Command="{x:Bind ViewModel.SaveEditedSaveCommand}"/>
                                     <AppBarButton Icon="Copy"
+                                                  Visibility="Collapsed"
                                                   Label="Copy"
                                                   LabelPosition="Collapsed"
                                                   ToolTipService.ToolTip="Copy" />
                                     <AppBarButton Icon="Share"
+                                                  Visibility="Collapsed"
                                                   Label="Share"
                                                   LabelPosition="Collapsed"
                                                   ToolTipService.ToolTip="Share"
