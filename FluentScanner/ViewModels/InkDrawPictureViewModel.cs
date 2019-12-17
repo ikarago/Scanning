@@ -18,6 +18,8 @@ namespace FluentScanner.ViewModels
         private InkPointerDeviceService _pointerDeviceService;
         private InkFileService _fileService;
         private InkZoomService _zoomService;
+        private float _zoomFactor;
+        private int _zoomFactorPercentage;
 
         private bool enableTouch = false;
         private bool enableMouse = false;
@@ -56,6 +58,21 @@ namespace FluentScanner.ViewModels
             EnableMouse = false;
 
             _pointerDeviceService.DetectPenEvent += (s, e) => EnableTouch = false;
+        }
+
+        public float ZoomFactor
+        {
+            get { return _zoomFactor; }
+            set
+            {
+                Set(ref _zoomFactor, value);
+                UpdateZoomFactorPercentage();
+            }
+        }
+        public int ZoomFactorPercentage
+        {
+            get { return _zoomFactorPercentage; }
+            set { Set(ref _zoomFactorPercentage, value); }
         }
 
         public bool EnableTouch
@@ -183,6 +200,20 @@ namespace FluentScanner.ViewModels
         {
             (SaveImageCommand as RelayCommand)?.OnCanExecuteChanged();
             (ClearAllCommand as RelayCommand)?.OnCanExecuteChanged();
+        }
+
+        private async void UpdateZoomFactorPercentage()
+        {
+            double factor = Convert.ToDouble(ZoomFactor);
+            int percentage = Convert.ToInt32(Math.Round(factor * 100, 0));
+            ZoomFactorPercentage = percentage;
+
+            /*if (percentage == 100)
+            {
+                await Task.Delay(3000);
+                UIZoomFactorVisibility = false;
+            }
+            else { UIZoomFactorVisibility = true; }*/
         }
     }
 }

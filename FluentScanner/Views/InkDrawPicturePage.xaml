@@ -94,7 +94,8 @@
                               CornerRadius="2"
                               ScrollViewer.VerticalScrollBarVisibility="Auto"
                               ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                              ZoomMode="Enabled">
+                              ZoomMode="Enabled"
+                              ViewChanged="canvasScroll_ViewChanged">
                     <Grid Background="{StaticResource InkCanvasBackground}"
                           Width="{Binding ElementName=inkCanvas, Path=Width}"
                           Height="{Binding ElementName=inkCanvas, Path=Height}">
@@ -165,7 +166,7 @@
                    HorizontalAlignment="Right"
                    Style="{ThemeResource FluentSubcaptionTextStyle}"
                    Margin="8,4">
-                    <Run Text="Zoom: "/><Run Text="100" /><Run Text="%"/>
+                    <Run Text="Zoom: "/><Run Text="{x:Bind ViewModel.ZoomFactorPercentage, Mode=OneWay}" /><Run Text="%"/>
         </TextBlock>
 
 

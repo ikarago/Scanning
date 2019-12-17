@@ -82,5 +82,10 @@ namespace FluentScanner.Views
                 Frame.GoBack();
             }
         }
+
+        private void canvasScroll_ViewChanged(object sender, ScrollViewerViewChangedEventArgs e)
+        {
+            ViewModel.ZoomFactor = canvasScroll.ZoomFactor;
+        }
     }
 }
