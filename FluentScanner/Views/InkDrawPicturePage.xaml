@@ -4,9 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:ctkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     mc:Ignorable="d">
-    <Grid x:Name="ContentArea">
-        <VisualStateManager.VisualStateGroups>
+    <Grid x:Name="ContentArea"
+          Background="{ThemeResource SystemControlAcrylicElementBrush}">
+        <!--<VisualStateManager.VisualStateGroups>
             <VisualStateGroup x:Name="visualStateGroup">
                 <VisualState x:Name="SmallVisualState">
                     <VisualState.StateTriggers>
@@ -29,23 +31,30 @@
                     </VisualState.Setters>
                 </VisualState>
             </VisualStateGroup>
-        </VisualStateManager.VisualStateGroups>
+        </VisualStateManager.VisualStateGroups>-->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
+
+        
+        <!-- Top Bar -->
         <RelativePanel>
-            <TextBlock x:Name="headerTitle" x:Uid="InkDrawPictureHeader" Margin="{StaticResource MediumLeftMargin}" Style="{StaticResource PageTitleStyle}" MaxLines="1" TextTrimming="CharacterEllipsis" RelativePanel.LeftOf="toolbar" RelativePanel.AlignLeftWithPanel="True" RelativePanel.AlignVerticalCenterWith="toolbar" />
+            <Button x:Name="btnBack"
+                    Style="{ThemeResource FluentDialogButtonBackStyle}"
+                    Click="btnBack_Click"/>
             <InkToolbar x:Name="toolbar" Background="Transparent" TargetInkCanvas="{x:Bind inkCanvas}" RelativePanel.AlignHorizontalCenterWithPanel="True">
                 <InkToolbarCustomToggleButton x:Uid="InkDrawPicture_TouchInkingButton" Background="Transparent" IsChecked="{x:Bind ViewModel.EnableTouch, Mode=TwoWay}">
                         <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xED5F;" />
                     </InkToolbarCustomToggleButton>
                     <InkToolbarCustomToggleButton x:Uid="InkDrawPicture_MouseInkingButton" Background="Transparent" IsChecked="{x:Bind ViewModel.EnableMouse, Mode=TwoWay}">
-                        <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE962;" />
+                        <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE962;" />
                     </InkToolbarCustomToggleButton>
+                <InkToolbarCustomToggleButton Content="&#xE708;"
+                                              FontFamily="Segoe MDL2 Assets"/>
             </InkToolbar>
-            <CommandBar x:Name="topCommandBar" Style="{StaticResource InkCommandBarStyle}" RelativePanel.RightOf="toolbar" RelativePanel.AlignRightWithPanel="True">
+            <!--<CommandBar x:Name="topCommandBar" Style="{StaticResource InkCommandBarStyle}" RelativePanel.RightOf="toolbar" RelativePanel.AlignRightWithPanel="True">
                 <CommandBar.PrimaryCommands>
                         <AppBarButton x:Uid="InkDrawPicture_ZoomInButton" Icon="ZoomIn" Command="{x:Bind ViewModel.ZoomInCommand}" BorderBrush="Transparent" BorderThickness="0,0,0,0" />
                         <AppBarButton x:Uid="InkDrawPicture_ZoomOutButton" Icon="ZoomOut" Command="{x:Bind ViewModel.ZoomOutCommand}" BorderBrush="Transparent" BorderThickness="0,0,0,0" />
@@ -56,39 +65,120 @@
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xE73F;" />
                         </AppBarButton>
                         <AppBarSeparator />
-                        <AppBarButton x:Uid="InkDrawPicture_OpenImageButton" Command="{x:Bind ViewModel.LoadImageCommand}" BorderBrush="Transparent" BorderThickness="0,0,0,0" >
+                        --><!--<AppBarButton x:Uid="InkDrawPicture_OpenImageButton" Command="{x:Bind ViewModel.LoadImageCommand}" BorderBrush="Transparent" BorderThickness="0,0,0,0" >
                             <FontIcon FontFamily="{ThemeResource SymbolThemeFontFamily}" Glyph="&#xEB9F;" />
-                        </AppBarButton>
+                        </AppBarButton>--><!--
                         <AppBarButton x:Uid="InkDrawPicture_SaveImageButton" Icon="Save" Command="{x:Bind ViewModel.SaveImageCommand}" BorderBrush="Transparent" BorderThickness="0,0,0,0" />
                         <AppBarSeparator/>
                         <AppBarButton x:Uid="InkDrawPicture_ClearAllButton" Icon="Delete" Command="{x:Bind ViewModel.ClearAllCommand}" BorderBrush="Transparent" BorderThickness="0,0,0,0" />
                     </CommandBar.SecondaryCommands>
-            </CommandBar>
+            </CommandBar>-->
         </RelativePanel>
-        <ScrollViewer
-            x:Name="canvasScroll"
-            Grid.Row="1"
-            Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}"
-            ScrollViewer.VerticalScrollBarVisibility="Auto"
-            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-            ZoomMode="Enabled">
-                <Grid
-                    Background="{StaticResource InkCanvasBackground}"
-                    Width="{Binding ElementName=inkCanvas, Path=Width}"
-                    Height="{Binding ElementName=inkCanvas, Path=Height}">
-                    <Image
-                        x:Name="image"
-                        Source="{x:Bind ViewModel.Image, Mode=TwoWay}"
-                        Stretch="None" />                    
-                    <InkCanvas
-                        x:Name="inkCanvas"
-                        HorizontalAlignment="Stretch"
-                        VerticalAlignment="Stretch" />
+
+        <!-- Image -->
+        <ctkc:DropShadowPanel Grid.Row="1"
+                              Grid.Column="1"
+                              Canvas.ZIndex="100"
+                              BlurRadius="10.0"
+                              ShadowOpacity="0.30"
+                              Margin="8,0"
+                              Color="Black"
+                              OffsetX="4"
+                              OffsetY="4"                              
+                              HorizontalAlignment="Stretch"
+                              HorizontalContentAlignment="Stretch">
+            <Grid>
+                <!-- Image -->
+                <ScrollViewer x:Name="canvasScroll"
+                              Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+                              CornerRadius="2"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                              ZoomMode="Enabled">
+                    <Grid Background="{StaticResource InkCanvasBackground}"
+                          Width="{Binding ElementName=inkCanvas, Path=Width}"
+                          Height="{Binding ElementName=inkCanvas, Path=Height}">
+                        <Image x:Name="image"
+                               Source="{x:Bind ViewModel.Image, Mode=TwoWay}"
+                               Stretch="None" />
+                        <InkCanvas x:Name="inkCanvas"
+                                   HorizontalAlignment="Stretch"
+                                   VerticalAlignment="Stretch" />
+                    </Grid>
+                </ScrollViewer>
+
+                <!-- Flying CommandBar -->
+                <ctkc:DropShadowPanel Grid.Row="1"
+                                      Canvas.ZIndex="100"
+                                      BlurRadius="10.0"
+                                      ShadowOpacity="0.30"
+                                      Color="Black"
+                                      OffsetX="4"
+                                      OffsetY="4"
+                                      Margin="12"
+                                      HorizontalAlignment="Right"
+                                      VerticalAlignment="Bottom">
+                    <CommandBar DefaultLabelPosition="Right"
+                                CornerRadius="2"
+                                Style="{ThemeResource CommandBarRevealStyle}">
+                        <CommandBar.PrimaryCommands>
+                            <AppBarButton Icon="Save"
+                                          Label="Save"
+                                          Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                          Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
+                                          FontWeight="SemiBold"
+                                          CornerRadius="2"
+                                          ToolTipService.ToolTip="Save"
+                                          Command="{x:Bind ViewModel.SaveImageCommand}"/>
+                            <AppBarButton Icon="Copy"
+                                          Visibility="Collapsed"
+                                          Label="Copy"
+                                          LabelPosition="Collapsed"
+                                          ToolTipService.ToolTip="Copy" />
+                            <AppBarButton Icon="Share"
+                                          Visibility="Collapsed"
+                                          Label="Share"
+                                          LabelPosition="Collapsed"
+                                          ToolTipService.ToolTip="Share"
+                                          CornerRadius="0,2,2,0">
+                                <AppBarButton.Flyout>
+                                    <MenuFlyout>
+                                        <MenuFlyoutItem Text="Send to email" >
+                                            <MenuFlyoutItem.Icon>
+                                                <FontIcon Glyph="&#xE89C;"/>
+                                            </MenuFlyoutItem.Icon>
+                                        </MenuFlyoutItem>
+                                        <MenuFlyoutItem Text="Share with other apps"
+                                                        Icon="Share" />
+                                    </MenuFlyout>
+                                </AppBarButton.Flyout>
+                            </AppBarButton>
+                        </CommandBar.PrimaryCommands>
+                    </CommandBar>
+                </ctkc:DropShadowPanel>
             </Grid>
-        </ScrollViewer>        
-        <CommandBar
+        </ctkc:DropShadowPanel>
+
+        <!-- Zoom factor -->
+        <TextBlock Grid.Row="2"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Right"
+                   Style="{ThemeResource FluentSubcaptionTextStyle}"
+                   Margin="8,4">
+                    <Run Text="Zoom: "/><Run Text="100" /><Run Text="%"/>
+        </TextBlock>
+
+
+
+
+
+        <!-- Old stuff -->
+        
+        
+        <!--<CommandBar
             x:Name="bottomCommandBar"
             Grid.Row="2"
+            Visibility="Collapsed"
             Style="{StaticResource InkCommandBarStyle}">
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Uid="InkDrawPicture_ZoomInButton" Icon="ZoomIn" Command="{x:Bind ViewModel.ZoomInCommand}" BorderBrush="Transparent" BorderThickness="0,0,0,0" />
@@ -107,6 +197,6 @@
                 <AppBarSeparator/>
                 <AppBarButton x:Uid="InkDrawPicture_ClearAllButton" Icon="Delete" Command="{x:Bind ViewModel.ClearAllCommand}" BorderBrush="Transparent" BorderThickness="0,0,0,0" />
             </CommandBar.SecondaryCommands>
-        </CommandBar>
+        </CommandBar>-->
     </Grid>
 </Page>

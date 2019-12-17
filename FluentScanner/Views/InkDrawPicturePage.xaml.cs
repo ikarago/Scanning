@@ -1,10 +1,11 @@
 ﻿using System;
-
+using System.Diagnostics;
 using FluentScanner.Services.Ink;
 using FluentScanner.ViewModels;
-
+using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 namespace FluentScanner.Views
 {
@@ -12,6 +13,8 @@ namespace FluentScanner.Views
     public sealed partial class InkDrawPicturePage : Page
     {
         public InkDrawPictureViewModel ViewModel { get; } = new InkDrawPictureViewModel();
+
+        private StorageFile tempScanFile;
 
         public InkDrawPicturePage()
         {
@@ -32,6 +35,14 @@ namespace FluentScanner.Views
             };
         }
 
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
+        {
+            base.OnNavigatedTo(e);
+            tempScanFile = (StorageFile)e.Parameter;
+            await ViewModel.OnLoadImageAsync(tempScanFile);
+
+        }
+
         private void SetCanvasSize()
         {
             inkCanvas.Width = Math.Max(canvasScroll.ViewportWidth, 1000);
@@ -48,6 +59,27 @@ namespace FluentScanner.Views
             {
                 inkCanvas.Width = e.NewSize.Width;
                 inkCanvas.Height = e.NewSize.Height;
+            }
+        }
+
+        private async void btnBack_Click(object sender, RoutedEventArgs e)
+        {
+            if (Frame.CanGoBack)
+            {
+                // #TODO remove temp scanned file
+                try
+                {
+                    Debug.WriteLine("InkDrawPicturePage - Attempting to delete TempScanFile...");
+                    await tempScanFile.DeleteAsync();
+                    Debug.WriteLine("InkDrawPicturePage - Deleted TempScanFile");
+
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine("InkDrawPicturePage - Couldn't delete TempScanFile");
+                    Debug.WriteLine(ex);
+                }
+                Frame.GoBack();
             }
         }
     }

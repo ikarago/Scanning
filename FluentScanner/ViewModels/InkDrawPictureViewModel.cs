@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -17,10 +19,11 @@ namespace FluentScanner.ViewModels
         private InkFileService _fileService;
         private InkZoomService _zoomService;
 
-        private bool enableTouch = true;
-        private bool enableMouse = true;
+        private bool enableTouch = false;
+        private bool enableMouse = false;
 
         private BitmapImage image;
+        private StorageFile tempScanFile;
 
         private ICommand loadImageCommand;
         private ICommand saveImageCommand;
@@ -48,6 +51,9 @@ namespace FluentScanner.ViewModels
             _strokeService.StrokesCollected += (s, e) => RefreshCommands();
             _strokeService.StrokesErased += (s, e) => RefreshCommands();
             _strokeService.ClearStrokesEvent += (s, e) => RefreshCommands();
+
+            EnableTouch = false;
+            EnableMouse = false;
 
             _pointerDeviceService.DetectPenEvent += (s, e) => EnableTouch = false;
         }
@@ -119,16 +125,44 @@ namespace FluentScanner.ViewModels
             }
         }
 
+        // Improve this :)
+        public async Task OnLoadImageAsync(StorageFile file)
+        {
+            tempScanFile = file;
+            var bitmapImage = await ImageHelper.GetBitmapFromImageAsync(tempScanFile);
+
+            if (file != null && bitmapImage != null)
+            {
+                ClearAll();
+                ImageFile = file;
+                Image = bitmapImage;
+                _zoomService?.FitToSize(Image.PixelWidth, Image.PixelHeight);
+            }
+        }
+
         private async Task OnSaveImageAsync()
         {
             await _fileService?.ExportToImageAsync(ImageFile);
+
+            try
+            {
+                Debug.WriteLine("InkDrawPictureViewModel - Attempting to delete TempScanFile...");
+                await tempScanFile.DeleteAsync();
+                Debug.WriteLine("InkDrawPictureViewModel - Deleted TempScanFile");
+
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("InkDrawPictureViewModel - Couldn't delete TempScanFile");
+                Debug.WriteLine(ex);
+            }
         }
 
         private bool CanSaveImage()
         {
-            return Image != null
-                && _strokeService != null
-                && _strokeService.GetStrokes().Any();
+            return Image != null;
+                //&& _strokeService != null
+                //&& _strokeService.GetStrokes().Any();
         }
 
         private bool CanClearAll()

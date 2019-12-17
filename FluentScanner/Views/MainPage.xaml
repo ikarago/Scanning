@@ -7,6 +7,7 @@
     xmlns:ctkc="using:Microsoft.Toolkit.Uwp.UI.Controls"
     xmlns:enumeration="using:Windows.Devices.Enumeration"
     xmlns:scanners="using:Windows.Devices.Scanners"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
     mc:Ignorable="d">
     <Grid x:Name="ContentArea"
           Background="{ThemeResource SystemControlAcrylicWindowBrush}">
@@ -47,6 +48,9 @@
             <!-- Scanner Options -->
             <StackPanel Orientation="Vertical"
                         Margin="24">
+                <TextBlock Text="New scan"
+                           Margin="0,0,0,12"
+                           Style="{ThemeResource FluentHeaderTextStyle}" />
                 <Button x:Name="btnLoadScanners"
                         Visibility="Collapsed"
                         Content="Load scanners"
@@ -54,6 +58,8 @@
                 <!-- Scanner -->
                 <ComboBox x:Name="cmbxScanner"
                           Header="Scanner"
+                          HorizontalAlignment="Stretch"
+                          Margin="0,0,0,8"
                           ItemsSource="{x:Bind ViewModel.ScannerCollection, Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.SelectedDevice, Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
@@ -66,6 +72,8 @@
                 <!-- Scanner Source -->
                 <ComboBox x:Name="cmbxScannerSource"
                           Header="Source"
+                          HorizontalAlignment="Stretch"
+                          Margin="0,0,0,8"
                           ItemsSource="{x:Bind ViewModel.ScannerSources,Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.SelectedScannerSource, Mode=TwoWay}">
                 </ComboBox>
@@ -73,6 +81,8 @@
                 <!-- Image format -->
                 <ComboBox x:Name="cmbxImageFormat"
                           Header="ImageFormat"
+                          HorizontalAlignment="Stretch"
+                          Margin="0,0,0,8"
                           ItemsSource="{x:Bind ViewModel.ScannerFormats, Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.SelectedScannerFormat, Mode=TwoWay}">
                     
@@ -81,18 +91,23 @@
                 <!-- Colour Mode -->
                 <ComboBox x:Name="cmbxColourMode"
                           Header="Colour"
+                          HorizontalAlignment="Stretch"
+                          Margin="0,0,0,8"
                           ItemsSource="{x:Bind ViewModel.ScannerColourModes, Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.SelectedScannerColourMode, Mode=TwoWay}">
                     
                 </ComboBox>
 
                 <!-- Resolution (DPI) -->
-                <ComboBox x:Name="cmbxResolution"
-                          Header="Resolution (DPI)"
-                          Visibility="Collapsed"
+                <controls:NumberBox x:Name="cmbxResolution"
+                                  Header="Resolution (DPI)"
+                                  Visibility="Visible"
+                                    SmallChange="10"
+                                    LargeChange="50"
+                                    SpinButtonPlacementMode="Inline"
                           >
                     
-                </ComboBox>
+                </controls:NumberBox>
                 
             </StackPanel>
 
@@ -155,8 +170,13 @@
             <!-- Content -->
             <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}"
                   CornerRadius="2"
-                  Padding="4">
-                <Grid.BackgroundTransition>
+                  Padding="0">
+                <Frame x:Name="frameDetails"
+                       HorizontalAlignment="Stretch"
+                       VerticalAlignment="Stretch"
+                       Content="{x:Bind ViewModel.DetailsFrame, Mode=TwoWay}"/>
+
+                <!--<Grid.BackgroundTransition>
                     <BrushTransition />
                 </Grid.BackgroundTransition>
                 <Grid.RowDefinitions>
@@ -164,13 +184,16 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
-                <!-- Top bar -->
+                --><!-- Top bar --><!--
                 <Grid>
                     <Button Style="{ThemeResource FluentDialogButtonBackStyle}" />
-                    <InkToolbar HorizontalAlignment="Center"/>
+                    <InkToolbar HorizontalAlignment="Center">
+                        <InkToolbarCustomToggleButton Content="&#xE708;"
+                                                      FontFamily="Segoe MDL2 Assets"/>
+                    </InkToolbar>
                 </Grid>
 
-                <!-- Scanned Image -->
+                --><!-- Scanned Image --><!--
                 <ctkc:DropShadowPanel Grid.Row="1"
                               Grid.RowSpan="2"
                               Grid.Column="1"
@@ -190,7 +213,7 @@
                        Source="{x:Bind ViewModel.ScannedImage, Mode=OneWay}"
                        Margin="24"/>
 
-                        <!-- Flying CommandBar -->
+                        --><!-- Flying CommandBar --><!--
                         <ctkc:DropShadowPanel Grid.Row="1"
                                 Canvas.ZIndex="100"
                                  BlurRadius="10.0"
@@ -240,7 +263,7 @@
                             </CommandBar>
                         </ctkc:DropShadowPanel>
                     </Grid>
-                </ctkc:DropShadowPanel>
+                </ctkc:DropShadowPanel>-->
 
 
             </Grid>

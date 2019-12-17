@@ -12,6 +12,7 @@ using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Streams;
 using Windows.UI.Core;
+using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Media.Imaging;
 
 namespace FluentScanner.ViewModels
@@ -72,7 +73,6 @@ namespace FluentScanner.ViewModels
             set
             {
                 Set(ref _selectedScannerFormat, value);
-                UpdateSelectedScannerSourceProperties();
             }
         }
 
@@ -90,7 +90,6 @@ namespace FluentScanner.ViewModels
             set
             {
                 Set(ref _selectedScannerColourMode, value);
-                UpdateSelectedScannerSourceProperties();
             }
         }
 
@@ -108,13 +107,13 @@ namespace FluentScanner.ViewModels
             set
             {
                 Set(ref _selectedScannerAutoCroppingMode, value);
-                UpdateSelectedScannerSourceProperties();
             }
         }
 
         // Resolution (DPI)
 
 
+        public Frame DetailsFrame { get; set; }
 
         // UI Elements
 
@@ -151,7 +150,8 @@ namespace FluentScanner.ViewModels
             ScannerFormats = new List<ImageScannerFormat>();
             ScannerColourModes = new List<ImageScannerColorMode>();
             ScannerAutoCropppingModes = new List<ImageScannerAutoCroppingMode>();
-
+            DetailsFrame = new Frame();
+            DetailsFrame.Navigate(typeof(Views.EmptyDetailsPage));
 
             // Start device watchers
             InitializeDeviceWatcher();
@@ -204,22 +204,22 @@ namespace FluentScanner.ViewModels
             }
         }
 
-        private ICommand _saveEditedScanCommand;
-        public ICommand SaveEditedSaveCommand
-        {
-            get
-            {
-                if (_saveEditedScanCommand == null)
-                {
-                    _saveEditedScanCommand = new RelayCommand(
-                        () =>
-                        {
-                            SaveModifiedScan();
-                        });
-                }
-                return _saveEditedScanCommand;
-            }
-        }
+        //private ICommand _saveEditedScanCommand;
+        //public ICommand SaveEditedSaveCommand
+        //{
+        //    get
+        //    {
+        //        if (_saveEditedScanCommand == null)
+        //        {
+        //            _saveEditedScanCommand = new RelayCommand(
+        //                () =>
+        //                {
+        //                    SaveModifiedScan();
+        //                });
+        //        }
+        //        return _saveEditedScanCommand;
+        //    }
+        //}
 
         // #TODO Commands for starting and stopping the DeviceWatcher?
 
@@ -261,18 +261,25 @@ namespace FluentScanner.ViewModels
 
         // Methodes
         // Device Watcher
-        private void OnScannerAdded(DeviceWatcher sender, DeviceInformation args)
+        private async void OnScannerAdded(DeviceWatcher sender, DeviceInformation args)
         {
             Debug.WriteLine("MainViewModel - Adding Scanner...");
             if (!ScannerCollection.Contains(args))
             {
                 ScannerCollection.Add(args);
+                if (ScannerCollection.Count == 1)   // If this is the first scanner added, the count will be set to 1. IF os, set this scanner as selected by default
+                {
+                    Debug.WriteLine("MainViewModel - Adding Scanner - Setting as selected");
+                    //SelectedDevice = ScannerCollection[0];
+                }
             }
             Debug.WriteLine("MainViewModel - Adding Scanner... Done! :)");
         }
 
         private void OnScannerRemoved(DeviceWatcher sender, DeviceInformationUpdate args)
         {
+            // #TODO Remove this from selected if this scanner was the selected one
+
             Debug.WriteLine("MainViewModel - Removing Scanner...");
             // Create a temporary collection to enumerate through
             var tempCollection = ScannerCollection;
@@ -305,9 +312,28 @@ namespace FluentScanner.ViewModels
         // Update methods
         private async void UpdateScannerInfo()
         {
-            SelectedScanner = await ImageScanner.FromIdAsync(_selectedDevice.Id);
-            ScannerSources = ScannerHelper.GetSupportedScanSources(SelectedScanner);
-            // #TODO Set the default properties
+            while (SelectedScanner == null)
+            {
+                try
+                {
+                    SelectedScanner = await ImageScanner.FromIdAsync(_selectedDevice.Id);
+                    ScannerSources = ScannerHelper.GetSupportedScanSources(SelectedScanner);
+                }
+                catch (Exception ex)
+                {
+                    // https://stackoverflow.com/questions/15772373/error-code-when-trying-to-connect-to-a-scanner-using-wpf
+
+                    Debug.WriteLine("MainViewModel - Scanner is busy");
+                    Debug.WriteLine(ex);
+                }
+            }
+
+            // Set the default properties
+            var defaultScannerSource = SelectedScanner.DefaultScanSource;
+            if (ScannerSources.Contains(defaultScannerSource))
+            {
+                SelectedScannerSource = defaultScannerSource;
+            }
         }
 
         /// <summary>
@@ -320,13 +346,57 @@ namespace FluentScanner.ViewModels
             ScannerFormats = ScannerHelper.GetSupportedImageFormats(SelectedScanner, SelectedScannerSource);
             ScannerColourModes.Clear();
             ScannerColourModes = ScannerHelper.GetSupportedColourModes(SelectedScanner, SelectedScannerSource);
-            ScannerAutoCropppingModes.Clear();
-            ScannerAutoCropppingModes = ScannerHelper.GetSupportedAutoCroppingModes(SelectedScanner, SelectedScannerSource);
+            //ScannerAutoCropppingModes.Clear();
+            //ScannerAutoCropppingModes = ScannerHelper.GetSupportedAutoCroppingModes(SelectedScanner, SelectedScannerSource);
             // #TODO Build this for DPI
 
-            // #TODO Select Defaults
-            // Set defaults in _properyName to avoid triggering the UpdateSelectedScannerSourceProperties()-method
-            
+            // Select Defaults
+            switch (SelectedScannerSource)
+            {
+                case ImageScannerScanSource.Feeder:
+                    {
+                        // Format
+                        var defaultScannerFormat = SelectedScanner.FeederConfiguration.DefaultFormat;
+                        if (ScannerFormats.Contains(defaultScannerFormat))
+                        { SelectedScannerFormat = defaultScannerFormat; }
+                        // Colour mode
+                        var defaultColourMode = SelectedScanner.FeederConfiguration.DefaultColorMode;
+                        if (ScannerColourModes.Contains(defaultColourMode))
+                        { SelectedScannerColourMode = defaultColourMode; }
+                        // Auto Cropping Mode
+                        //SelectedScanner.FeederConfiguration.AutoCroppingMode = ImageScannerAutoCroppingMode.Disabled;
+
+                        break;
+                    }
+                case ImageScannerScanSource.Flatbed:
+                    {
+                        // Format
+                        var defaultScannerFormat = SelectedScanner.FlatbedConfiguration.DefaultFormat;
+                        if (ScannerFormats.Contains(defaultScannerFormat))
+                        { SelectedScannerFormat = defaultScannerFormat; }
+                        // Colour mode
+                        var defaultColourMode = SelectedScanner.FlatbedConfiguration.DefaultColorMode;
+                        if (ScannerColourModes.Contains(defaultColourMode))
+                        { SelectedScannerColourMode = defaultColourMode; }
+                        // Auto Cropping Mode
+                        //SelectedScanner.FlatbedConfiguration.AutoCroppingMode = ImageScannerAutoCroppingMode.Disabled;
+
+                        break;
+                    }
+                case ImageScannerScanSource.AutoConfigured:
+                    {
+                        // Only Format is available as a customisable option here
+                        var defaultScannerFormat = SelectedScanner.AutoConfiguration.DefaultFormat;
+                        if (ScannerFormats.Contains(defaultScannerFormat))
+                        { SelectedScannerFormat = defaultScannerFormat; }
+                        break;
+                    }
+                case ImageScannerScanSource.Default:
+                    {
+                        // No available settings for this
+                        break;
+                    }
+            }
 
 
             // #TODO Update Visibility statusses
@@ -334,14 +404,6 @@ namespace FluentScanner.ViewModels
 
         }
 
-        /// <summary>
-        /// Updates the properties in the SelectedScanner in the correct selected source
-        /// </summary>
-        private void UpdateSelectedScannerSourceProperties()
-        {
-            // #TODO Do this with a switch case
-
-        }
 
         private void SetScannerPropertiesForScanning()
         {
@@ -367,7 +429,7 @@ namespace FluentScanner.ViewModels
                 }
                 case ImageScannerScanSource.AutoConfigured:
                 {
-                    SelectedScanner.FeederConfiguration.Format = SelectedScannerFormat;
+                    SelectedScanner.AutoConfiguration.Format = SelectedScannerFormat;
                     break;
                 }
                 case ImageScannerScanSource.Default:
@@ -388,60 +450,64 @@ namespace FluentScanner.ViewModels
             var result = await SelectedScanner.ScanFilesToFolderAsync(SelectedScannerSource, tempFolder);
 
             var listOfFiles = result.ScannedFiles;
+            // #TODO Check if it's an image (Bitmap, jpg or png file), otherwise show alternative details screen
             ImageFile = listOfFiles[0];
-            // #TODO Show the picture in the details side with Windows Ink
+            // Show the picture in the details side with Windows Ink
             OpenScannedImageInDetails();
         }
 
         private async void OpenScannedImageInDetails()
         {
+            DetailsFrame.Navigate(typeof(Views.InkDrawPicturePage), ImageFile);
             // Get the image
             try
             {
-                ScannedImage = await ImageHelper.GetBitmapFromImageAsync(ImageFile);
+                //ScannedImage = await ImageHelper.GetBitmapFromImageAsync(ImageFile);
+
+                // Open it in the details
+                
             }
             catch { }
             
             // Check if it's an supported Image File
 
-            // Open it in the details
 
         }
 
-        private async void SaveModifiedScan()
-        {
-            FileSavePicker picker = new FileSavePicker();
-            picker.FileTypeChoices.Add("JPEG", new List<string>() { ".jpg" });
+        ////private async void SaveModifiedScan()
+        ////{
+        ////    FileSavePicker picker = new FileSavePicker();
+        ////    picker.FileTypeChoices.Add("JPEG", new List<string>() { ".jpg" });
 
-            picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
-            picker.SuggestedFileName = ("Scan" + DateTime.Now.ToString());
+        ////    picker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
+        ////    picker.SuggestedFileName = ("Scan" + DateTime.Now.ToString());
 
-            StorageFile file = await picker.PickSaveFileAsync();
-            if (file != null)
-            {
-                // Get the software bitmap
-                SoftwareBitmap softwareBitmap;
-                using (IRandomAccessStream stream = await ImageFile.OpenAsync(FileAccessMode.Read))
-                {
-                    BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
-                    softwareBitmap = await decoder.GetSoftwareBitmapAsync();
-                }
+        ////    StorageFile file = await picker.PickSaveFileAsync();
+        ////    if (file != null)
+        ////    {
+        ////        // Get the software bitmap
+        ////        SoftwareBitmap softwareBitmap;
+        ////        using (IRandomAccessStream stream = await ImageFile.OpenAsync(FileAccessMode.Read))
+        ////        {
+        ////            BitmapDecoder decoder = await BitmapDecoder.CreateAsync(stream);
+        ////            softwareBitmap = await decoder.GetSoftwareBitmapAsync();
+        ////        }
 
-                // Write the software bitmap
-                using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
-                {
-                    BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
-                    encoder.SetSoftwareBitmap(softwareBitmap);
-                    encoder.IsThumbnailGenerated = true;
+        ////        // Write the software bitmap
+        ////        using (IRandomAccessStream stream = await file.OpenAsync(FileAccessMode.ReadWrite))
+        ////        {
+        ////            BitmapEncoder encoder = await BitmapEncoder.CreateAsync(BitmapEncoder.JpegEncoderId, stream);
+        ////            encoder.SetSoftwareBitmap(softwareBitmap);
+        ////            encoder.IsThumbnailGenerated = true;
 
-                    try
-                    {
-                        await encoder.FlushAsync();
-                    }
-                    catch { }
-                }
-            }
-        }
+        ////            try
+        ////            {
+        ////                await encoder.FlushAsync();
+        ////            }
+        ////            catch { }
+        ////        }
+        ////    }
+        ////}
 
 
         /// <summary>

@@ -57,10 +57,10 @@ namespace FluentScanner.Services.Ink
 
         public async Task<StorageFile> ExportToImageAsync(StorageFile imageFile = null)
         {
-            if (!_strokesService.GetStrokes().Any())
-            {
-                return null;
-            }
+            //if (!_strokesService.GetStrokes().Any())
+            //{
+            //    return null;
+            //}
 
             if (imageFile != null)
             {
