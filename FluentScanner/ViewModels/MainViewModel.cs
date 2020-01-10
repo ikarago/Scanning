@@ -412,24 +412,27 @@ namespace FluentScanner.ViewModels
             {
                 case ImageScannerScanSource.Flatbed:
                 {
-                        // #TODO Find out why VS auto tabs this too far.
-                        // #TODO Add in exception catchers
-                    SelectedScanner.FlatbedConfiguration.Format = SelectedScannerFormat;
+                    // #TODO Find out why VS auto tabs this too far.
+                    // #TODO Add in exception catchers
+                    //SelectedScanner.FlatbedConfiguration.Format = SelectedScannerFormat;
+                    SelectedScanner.FlatbedConfiguration.Format = ImageScannerFormat.DeviceIndependentBitmap;   // Forcing scanning as a bitmap for high quality manipulation in the editor
                     SelectedScanner.FlatbedConfiguration.ColorMode = SelectedScannerColourMode;
-                        //if (SelectedScannerAutoCroppingMode != null)
-                        //{   SelectedScanner.FlatbedConfiguration.AutoCroppingMode = SelectedScannerAutoCroppingMode; }
-                        break;
+                    //if (SelectedScannerAutoCroppingMode != null)
+                    //{   SelectedScanner.FlatbedConfiguration.AutoCroppingMode = SelectedScannerAutoCroppingMode; }
+                    break;
                 }
                 case ImageScannerScanSource.Feeder:
                 {
-                    SelectedScanner.FeederConfiguration.Format = SelectedScannerFormat;
+                    //SelectedScanner.FeederConfiguration.Format = SelectedScannerFormat;
+                    SelectedScanner.FeederConfiguration.Format = ImageScannerFormat.DeviceIndependentBitmap;    // Forcing scanning as a bitmap for high quality manipulation in the editor
                     SelectedScanner.FeederConfiguration.ColorMode = SelectedScannerColourMode;
                     //SelectedScanner.FeederConfiguration.AutoCroppingMode = SelectedScannerAutoCroppingMode;
                     break;
                 }
                 case ImageScannerScanSource.AutoConfigured:
                 {
-                    SelectedScanner.AutoConfiguration.Format = SelectedScannerFormat;
+                    //SelectedScanner.AutoConfiguration.Format = SelectedScannerFormat;
+                    SelectedScanner.AutoConfiguration.Format = ImageScannerFormat.DeviceIndependentBitmap;  // Forcing scanning as a bitmap for high quality manipulation in the editor
                     break;
                 }
                 case ImageScannerScanSource.Default:

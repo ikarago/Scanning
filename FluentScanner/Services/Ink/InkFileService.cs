@@ -9,6 +9,7 @@ using Windows.Foundation;
 using Windows.Storage;
 using Windows.Storage.Pickers;
 using Windows.Storage.Provider;
+using Windows.Storage.Streams;
 using Windows.UI.Xaml.Controls;
 
 namespace FluentScanner.Services.Ink
@@ -102,7 +103,7 @@ namespace FluentScanner.Services.Ink
                         ds.DrawInk(_strokesService.GetStrokes());
                     }
 
-                    await renderTarget.SaveAsync(outStream, CanvasBitmapFileFormat.Png);
+                    await SaveImageAsync(imageFile, renderTarget, outStream);
                 }
             }
 
@@ -131,20 +132,57 @@ namespace FluentScanner.Services.Ink
 
             using (var fileStream = await file.OpenAsync(FileAccessMode.ReadWrite))
             {
-                await renderTarget.SaveAsync(fileStream, CanvasBitmapFileFormat.Png);
+                await SaveImageAsync(file, renderTarget, fileStream);
             }
 
             return file;
         }
 
+        /// <summary>
+        /// Opens the SaveFile Picker to let the user save their image
+        /// </summary>
+        /// <returns>StoageFile with the name and chosen FileType</returns>
         private async Task<StorageFile> GetImageToSaveAsync()
         {
             var savePicker = new FileSavePicker();
+            savePicker.SuggestedFileName = ("Scan" + "_" + DateTime.Now.Year + DateTime.Now.Month + DateTime.Now.Day + "_" + DateTime.Now.ToShortTimeString());
+            //savePicker.SuggestedFileName = ("Scan" + "_" + DateTime.Now.ToShortDateString() + "_" + DateTime.Now.ToLongTimeString()); 
             savePicker.SuggestedStartLocation = PickerLocationId.PicturesLibrary;
             savePicker.FileTypeChoices.Add("PNG", new List<string>() { ".png" });
+            savePicker.FileTypeChoices.Add("JPEG", new List<string>() { ".jpg" });
+            savePicker.FileTypeChoices.Add("Bitmap", new List<string>() { ".bmp" });
+            savePicker.FileTypeChoices.Add("TIFF", new List<string>() { ".tiff" });
             var saveFile = await savePicker.PickSaveFileAsync();
 
             return saveFile;
+        }
+
+        /// <summary>
+        /// Writes the image to the given StorageFile
+        /// </summary>
+        /// <param name="imageFile"></param>
+        /// <param name="renderTarget"></param>
+        /// <param name="outStream"></param>
+        /// <returns></returns>
+        private async Task<bool> SaveImageAsync(StorageFile imageFile, CanvasRenderTarget renderTarget, IRandomAccessStream outStream)
+        {
+            if (imageFile.FileType == ".png")
+            {
+                await renderTarget.SaveAsync(outStream, CanvasBitmapFileFormat.Png);
+            }
+            else if (imageFile.FileType == ".jpg")
+            {
+                await renderTarget.SaveAsync(outStream, CanvasBitmapFileFormat.Jpeg);
+            }
+            else if (imageFile.FileType == ".bmp")
+            {
+                await renderTarget.SaveAsync(outStream, CanvasBitmapFileFormat.Bmp);
+            }
+            else if (imageFile.FileType == ".tiff")
+            {
+                await renderTarget.SaveAsync(outStream, CanvasBitmapFileFormat.Tiff);
+            }
+            return true;
         }
     }
 }
