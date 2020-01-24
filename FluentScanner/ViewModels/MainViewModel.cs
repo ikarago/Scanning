@@ -140,6 +140,13 @@ namespace FluentScanner.ViewModels
             set { Set(ref _uiScanningInProgress, value); }
         }
 
+        private bool _uiIsScannerSelected;
+        public bool UIIsScannerSelected
+        {
+            get { return _uiIsScannerSelected; }
+            set { Set(ref _uiIsScannerSelected, value); }
+        }
+
 
         // Constructor
         public MainViewModel()
@@ -163,6 +170,7 @@ namespace FluentScanner.ViewModels
 
             // Set UI
             UIScanningInProgress = false;
+            UIIsScannerSelected = false;
         }
         private void InitializeDeviceWatcher()
         {
@@ -325,6 +333,7 @@ namespace FluentScanner.ViewModels
                 {
                     SelectedScanner = await ImageScanner.FromIdAsync(_selectedDevice.Id);
                     ScannerSources = ScannerHelper.GetSupportedScanSources(SelectedScanner);
+                    UIIsScannerSelected = true;
                 }
                 catch (Exception ex)
                 {

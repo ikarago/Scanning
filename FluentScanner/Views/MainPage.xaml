@@ -163,6 +163,7 @@
                                       FontWeight="SemiBold"
                                       CornerRadius="2,0,0,2"
                                       ToolTipService.ToolTip="New scan"
+                                      IsEnabled="{x:Bind ViewModel.UIIsScannerSelected, Mode=OneWay}"
                                       Command="{x:Bind ViewModel.NewScanCommand}"/>
                     </CommandBar.PrimaryCommands>
                     <CommandBar.SecondaryCommands>
