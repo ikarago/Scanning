@@ -118,11 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="AppDisplayName" xml:space="preserve">
-    <value>FluentScanner</value>
+    <value>Scanning [Alpha]</value>
     <comment>Application display name</comment>
   </data>
   <data name="AppDescription" xml:space="preserve">
-    <value>FluentScanner</value>
+    <value>Scanning [Alpha]</value>
     <comment>Application description</comment>
   </data>
   <data name="Main_Title.Text" xml:space="preserve">
@@ -149,11 +149,11 @@
     <value>Mouse inking</value>
     <comment>Mouse inking button automation name property for InkDrawPicture</comment>
   </data>
-<data name="InkDrawPicture_ZoomInButton.Label" xml:space="preserve">
+  <data name="InkDrawPicture_ZoomInButton.Label" xml:space="preserve">
     <value>Zoom in</value>
     <comment>ZoomIn button label property for InkDrawPicture</comment>
   </data>
-    <data name="InkDrawPicture_ZoomInButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="InkDrawPicture_ZoomInButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Zoom in</value>
     <comment>ZoomIn button tooltip property for InkDrawPicture</comment>
   </data>
@@ -165,7 +165,7 @@
     <value>Zoom out</value>
     <comment>ZoomOut button label property for InkDrawPicture</comment>
   </data>
-    <data name="InkDrawPicture_ZoomOutButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="InkDrawPicture_ZoomOutButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Zoom out</value>
     <comment>ZoomOut button tooltip property for InkDrawPicture</comment>
   </data>
@@ -177,7 +177,7 @@
     <value>Original size</value>
     <comment>OriginalSize button label property for InkDrawPicture</comment>
   </data>
-    <data name="InkDrawPicture_OriginalSizeButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="InkDrawPicture_OriginalSizeButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Original size</value>
     <comment>OriginalSize button tooltip property for InkDrawPicture</comment>
   </data>
@@ -189,7 +189,7 @@
     <value>Fit to screen</value>
     <comment>FitToScreen button label property for InkDrawPicture</comment>
   </data>
-    <data name="InkDrawPicture_FitToScreenButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="InkDrawPicture_FitToScreenButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Fit to screen</value>
     <comment>FitToScreen button tooltip property for InkDrawPicture</comment>
   </data>
@@ -201,7 +201,7 @@
     <value>Open image</value>
     <comment>OpenImage button label property for InkDrawPicture</comment>
   </data>
-    <data name="InkDrawPicture_OpenImageButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="InkDrawPicture_OpenImageButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Open image</value>
     <comment>OpenImage button tooltip property for InkDrawPicture</comment>
   </data>
@@ -213,7 +213,7 @@
     <value>Save image</value>
     <comment>SaveImage button label property for InkDrawPicture</comment>
   </data>
-    <data name="InkDrawPicture_SaveImageButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="InkDrawPicture_SaveImageButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Save image</value>
     <comment>SaveImage button tooltip property for InkDrawPicture</comment>
   </data>
@@ -225,7 +225,7 @@
     <value>Clear all</value>
     <comment>ClearAll button label property for InkDrawPicture</comment>
   </data>
-    <data name="InkDrawPicture_ClearAllButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
+  <data name="InkDrawPicture_ClearAllButton.[using:Windows.UI.Xaml.Controls]ToolTipService.ToolTip" xml:space="preserve">
     <value>Clear all</value>
     <comment>ClearAll button tooltip property for InkDrawPicture</comment>
   </data>
@@ -253,31 +253,31 @@
     <value>Light</value>
     <comment>Light theme text for Settings</comment>
   </data>
-  <data name="Settings_About.Text" xml:space="preserve">    
+  <data name="Settings_About.Text" xml:space="preserve">
     <value>About this application</value>
     <comment>About this application title for Settings</comment>
   </data>
-  <data name="Settings_AboutDescription.Text" xml:space="preserve">    
+  <data name="Settings_AboutDescription.Text" xml:space="preserve">
     <value>Settings page placeholder text.  Your app description goes here.</value>
     <comment>About this application description for Settings</comment>
   </data>
-  <data name="Settings_PrivacyTermsLink.Content" xml:space="preserve">    
+  <data name="Settings_PrivacyTermsLink.Content" xml:space="preserve">
     <value>Privacy Statement</value>
     <comment>Privacy Statement link content for Settings</comment>
   </data>
-  <data name="Settings_PrivacyTermsLink.NavigateUri" xml:space="preserve">  
+  <data name="Settings_PrivacyTermsLink.NavigateUri" xml:space="preserve">
     <value>https://YourPrivacyUrlGoesHere/</value>
     <comment>Here is your Privacy Statement url for Settings</comment>
   </data>
-  <data name="Settings_Personalization.Text" xml:space="preserve">   
+  <data name="Settings_Personalization.Text" xml:space="preserve">
     <value>Personalization</value>
     <comment>Personalization text for Settings</comment>
   </data>
-  <data name="ExceptionEnumToBooleanConverterValueMustBeAnEnum" xml:space="preserve">   
+  <data name="ExceptionEnumToBooleanConverterValueMustBeAnEnum" xml:space="preserve">
     <value>value must be an Enum!</value>
     <comment>Value must be an Enum in enum to boolean converter</comment>
   </data>
-  <data name="ExceptionEnumToBooleanConverterParameterMustBeAnEnumName" xml:space="preserve">   
+  <data name="ExceptionEnumToBooleanConverterParameterMustBeAnEnumName" xml:space="preserve">
     <value>parameter must be an Enum name!</value>
     <comment>Parameter must be an Enum name in enum to boolean converter</comment>
   </data>
