@@ -133,8 +133,12 @@ namespace FluentScanner.ViewModels
             set { Set(ref _scannedImage, value); }
         }
 
-
-
+        private bool _uiScanningInProgress;
+        public bool UIScanningInProgress
+        {
+            get { return _uiScanningInProgress; }
+            set { Set(ref _uiScanningInProgress, value); }
+        }
 
 
         // Constructor
@@ -156,6 +160,9 @@ namespace FluentScanner.ViewModels
             // Start device watchers
             InitializeDeviceWatcher();
             StartDeviceWatcher();
+
+            // Set UI
+            UIScanningInProgress = false;
         }
         private void InitializeDeviceWatcher()
         {
@@ -444,6 +451,8 @@ namespace FluentScanner.ViewModels
 
         private async void ScanWithCustomSettings()
         {
+            UIScanningInProgress = true;
+
             SetScannerPropertiesForScanning();
             // #TODO: Find the proper moment to clear the temp folder to avoid overflowing it with data
             StorageFolder tempFolder = Windows.Storage.ApplicationData.Current.TemporaryFolder;
@@ -455,6 +464,8 @@ namespace FluentScanner.ViewModels
             var listOfFiles = result.ScannedFiles;
             // #TODO Check if it's an image (Bitmap, jpg or png file), otherwise show alternative details screen
             ImageFile = listOfFiles[0];
+
+            UIScanningInProgress = false;
             // Show the picture in the details side with Windows Ink
             OpenScannedImageInDetails();
         }

@@ -39,6 +39,35 @@
                        VerticalAlignment="Center"/>
         </StackPanel>
 
+        <!-- Scanning in progress message -->
+        <!--<Grid Grid.Row="0"
+              Grid.RowSpan="2"
+              Grid.Column="0"
+              Grid.ColumnSpan="2"
+              Canvas.ZIndex="500"
+              Visibility="{x:Bind ViewModel.UIScanningInProgress, Mode=OneWay}"
+              Background="{ThemeResource SystemControlAcrylicElementBrush}">
+
+            <Grid.ChildrenTransitions>
+                <TransitionCollection>
+                    <PopupThemeTransition />
+                </TransitionCollection>
+            </Grid.ChildrenTransitions>
+            <StackPanel Orientation="Vertical"
+                        HorizontalAlignment="Stretch"   
+                        VerticalAlignment="Center">
+                <controls:ProgressBar IsIndeterminate="True"
+                             HorizontalAlignment="Stretch"
+                                      Margin="0,0,0,24"/>
+                <TextBlock Text="Scanning..."
+                           HorizontalAlignment="Center"
+                           Style="{ThemeResource FluentTitleTextStyle}"/>
+                <Button Content="Cancel"
+                        HorizontalAlignment="Center"
+                        Visibility="Collapsed"/>
+            </StackPanel>
+        </Grid>-->
+
         <!-- Scanner options -->
         <Grid Grid.Row="1"
               Grid.Column="0">
@@ -83,6 +112,7 @@
                           Header="ImageFormat"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,8"
+                          Visibility="Collapsed"
                           ItemsSource="{x:Bind ViewModel.ScannerFormats, Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.SelectedScannerFormat, Mode=TwoWay}">
                     
@@ -93,6 +123,7 @@
                           Header="Colour"
                           HorizontalAlignment="Stretch"
                           Margin="0,0,0,8"
+                          Visibility="Collapsed"
                           ItemsSource="{x:Bind ViewModel.ScannerColourModes, Mode=OneWay}"
                           SelectedItem="{x:Bind ViewModel.SelectedScannerColourMode, Mode=TwoWay}">
                     
@@ -100,12 +131,11 @@
 
                 <!-- Resolution (DPI) -->
                 <controls:NumberBox x:Name="cmbxResolution"
-                                  Header="Resolution (DPI)"
-                                  Visibility="Visible"
+                                    Header="Resolution (DPI)"
+                                    Visibility="Collapsed"
                                     SmallChange="10"
                                     LargeChange="50"
-                                    SpinButtonPlacementMode="Inline"
-                          >
+                                    SpinButtonPlacementMode="Inline">
                     
                 </controls:NumberBox>
                 
