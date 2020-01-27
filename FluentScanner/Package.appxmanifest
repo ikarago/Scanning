@@ -8,15 +8,15 @@
   IgnorableNamespaces="uap mp genTemplate">
 
   <Identity
-    Name="1FF7667A-ACA1-47AC-AFBD-056023B502F3"
-    Publisher="CN=pants"
-    Version="0.1.0.0" />
+    Name="21834MacaroniSoft.Scanning"
+    Publisher="CN=A709FCE2-98A6-4948-A3F2-B538AFE341F1"
+    Version="0.0.1.0" />
 
-  <mp:PhoneIdentity PhoneProductId="1FF7667A-ACA1-47AC-AFBD-056023B502F3" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
+  <mp:PhoneIdentity PhoneProductId="2abb22ab-e7e3-480e-bb41-da849b08b286" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>FluentScanner</DisplayName>
-    <PublisherDisplayName>pants</PublisherDisplayName>
+    <DisplayName>Scanning</DisplayName>
+    <PublisherDisplayName>Ikarago</PublisherDisplayName>
     <Logo>Assets\Logo\StoreLogo.png</Logo>
   </Properties>
 
