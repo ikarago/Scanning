@@ -52,7 +52,8 @@
                         <FontIcon FontFamily="Segoe MDL2 Assets" Glyph="&#xE962;" />
                     </InkToolbarCustomToggleButton>
                 <InkToolbarCustomToggleButton Content="&#xE708;"
-                                              FontFamily="Segoe MDL2 Assets"/>
+                                              FontFamily="Segoe MDL2 Assets"
+                                              Visibility="Collapsed"/>
             </InkToolbar>
             <!--<CommandBar x:Name="topCommandBar" Style="{StaticResource InkCommandBarStyle}" RelativePanel.RightOf="toolbar" RelativePanel.AlignRightWithPanel="True">
                 <CommandBar.PrimaryCommands>

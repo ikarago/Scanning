@@ -71,7 +71,7 @@
                     </Grid>
 
                     <!-- About Description -->
-                    <TextBlock Text="Scanning, created and programmed by Ikarago, 2019"
+                    <TextBlock Text="Scanning [Alpha], created and programmed by Ikarago, 2020"
                                x:Uid="About_Description"
                                TextWrapping="Wrap"
                                Margin="{StaticResource XSmallTopMargin}"/>

@@ -33,7 +33,7 @@
                    Margin="16,0"
                    Source="ms-appx:///Assets/Logo/Square44x44Logo.altform-unplated_targetsize-256.png" />
             <TextBlock x:Uid="Main_AppDisplayName"
-                       Text="Scanning"
+                       Text="Scanning [Alpha]"
                        Style="{ThemeResource CaptionTextBlockStyle}"
                        Margin="0,0,12,0"
                        VerticalAlignment="Center"/>
