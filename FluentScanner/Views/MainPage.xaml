@@ -16,11 +16,6 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="360" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-
         <!-- Titlebar -->
         <StackPanel Grid.Row="0"
                     Grid.Column="0"
@@ -39,266 +34,179 @@
                        VerticalAlignment="Center"/>
         </StackPanel>
 
-        <!-- Scanning in progress message -->
-        <Grid Grid.Row="0"
-              Grid.RowSpan="2"
-              Grid.Column="0"
-              Grid.ColumnSpan="2"
-              Canvas.ZIndex="500"
-              Visibility="{x:Bind ViewModel.UIScanningInProgress, Mode=OneWay}"
-              Background="{ThemeResource SystemControlAcrylicElementBrush}">
-
-            <Grid.ChildrenTransitions>
-                <TransitionCollection>
-                    <PopupThemeTransition />
-                </TransitionCollection>
-            </Grid.ChildrenTransitions>
-            <StackPanel Orientation="Vertical"
-                        HorizontalAlignment="Stretch"   
-                        VerticalAlignment="Center">
-                <controls:ProgressBar IsIndeterminate="True"
-                             HorizontalAlignment="Stretch"
-                                      Margin="0,0,0,24"/>
-                <TextBlock Text="Scanning..."
-                           HorizontalAlignment="Center"
-                           Style="{ThemeResource FluentTitleTextStyle}"/>
-                <Button Content="Cancel"
-                        HorizontalAlignment="Center"
-                        Visibility="Collapsed"/>
-            </StackPanel>
-        </Grid>
-
-        <!-- Scanner options -->
-        <Grid Grid.Row="1"
-              Grid.Column="0">
-            <!-- No scanner selected -->
-
-            
-            <!-- Scanner Options -->
-            <StackPanel Orientation="Vertical"
-                        Margin="24">
-                <TextBlock Text="New scan"
-                           Margin="0,0,0,12"
-                           Style="{ThemeResource FluentHeaderTextStyle}" />
-                <Button x:Name="btnLoadScanners"
-                        Visibility="Collapsed"
-                        Content="Load scanners"
-                        Click="btnLoadScanners_Click" />
-                <!-- Scanner -->
-                <ComboBox x:Name="cmbxScanner"
-                          Header="Scanner"
-                          HorizontalAlignment="Stretch"
-                          Margin="0,0,0,8"
-                          ItemsSource="{x:Bind ViewModel.ScannerCollection, Mode=OneWay}"
-                          SelectedItem="{x:Bind ViewModel.SelectedDevice, Mode=TwoWay}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate x:DataType="enumeration:DeviceInformation">
-                            <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
-
-                <!-- Scanner Source -->
-                <ComboBox x:Name="cmbxScannerSource"
-                          Header="Source"
-                          HorizontalAlignment="Stretch"
-                          Margin="0,0,0,8"
-                          ItemsSource="{x:Bind ViewModel.ScannerSources,Mode=OneWay}"
-                          SelectedItem="{x:Bind ViewModel.SelectedScannerSource, Mode=TwoWay}">
-                </ComboBox>
-
-                <!-- Image format -->
-                <ComboBox x:Name="cmbxImageFormat"
-                          Header="ImageFormat"
-                          HorizontalAlignment="Stretch"
-                          Margin="0,0,0,8"
-                          Visibility="Collapsed"
-                          ItemsSource="{x:Bind ViewModel.ScannerFormats, Mode=OneWay}"
-                          SelectedItem="{x:Bind ViewModel.SelectedScannerFormat, Mode=TwoWay}">
-                    
-                </ComboBox>
-
-                <!-- Colour Mode -->
-                <ComboBox x:Name="cmbxColourMode"
-                          Header="Colour"
-                          HorizontalAlignment="Stretch"
-                          Margin="0,0,0,8"
-                          Visibility="Collapsed"
-                          ItemsSource="{x:Bind ViewModel.ScannerColourModes, Mode=OneWay}"
-                          SelectedItem="{x:Bind ViewModel.SelectedScannerColourMode, Mode=TwoWay}">
-                    
-                </ComboBox>
-
-                <!-- Resolution (DPI) -->
-                <controls:NumberBox x:Name="cmbxResolution"
-                                    Header="Resolution (DPI)"
-                                    Visibility="Collapsed"
-                                    SmallChange="10"
-                                    LargeChange="50"
-                                    SpinButtonPlacementMode="Inline">
-                    
-                </controls:NumberBox>
-                
-            </StackPanel>
-
-
-            <!-- Flying CommandBar -->
-            <ctkc:DropShadowPanel Canvas.ZIndex="100"
-                                 BlurRadius="10.0"
-                                 ShadowOpacity="0.30"
-                                 Color="Black"
-                                 OffsetX="4"
-                                 OffsetY="4"
-                                 Margin="24"
-                                 HorizontalAlignment="Right"
-                                 VerticalAlignment="Bottom">
-                <CommandBar DefaultLabelPosition="Right"
-                            CornerRadius="2"
-                            Style="{ThemeResource CommandBarRevealStyle}">
-                    <CommandBar.PrimaryCommands>
-                        <AppBarButton Icon="Scan"
-                                      Label="New scan"
-                                      Background="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                      Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
-                                      FontWeight="SemiBold"
-                                      CornerRadius="2,0,0,2"
-                                      ToolTipService.ToolTip="New scan"
-                                      IsEnabled="{x:Bind ViewModel.UIIsScannerSelected, Mode=OneWay}"
-                                      Command="{x:Bind ViewModel.NewScanCommand}"/>
-                    </CommandBar.PrimaryCommands>
-                    <CommandBar.SecondaryCommands>
-                        <AppBarButton Icon="Setting"
-                                      Label="Settings"
-                                      Command="{x:Bind ViewModel.SettingsCommand}"/>
-                        <AppBarButton Label="About"
-                                      Command="{x:Bind ViewModel.AboutCommand}">
-                            <AppBarButton.Icon>
-                                <FontIcon Glyph="&#xE946;"/>
-                            </AppBarButton.Icon>
-                        </AppBarButton>
-                    </CommandBar.SecondaryCommands>
-                </CommandBar>
-            </ctkc:DropShadowPanel>
-
-
-
-        </Grid>
-
-        <!-- Document details -->
-        <!-- KEEP IN MIND! - Let the contents have at least 32px of padding, due to the titlebar! -->
-        <ctkc:DropShadowPanel Grid.Row="1"
-                              Grid.RowSpan="2"
-                              Grid.Column="1"
-                              Canvas.ZIndex="100"
-                              BlurRadius="10.0"
-                              ShadowOpacity="0.30"
-                              Color="Black"
-                              OffsetX="4"
-                              OffsetY="4"
-                              Margin="8,0,8,8"
-                              HorizontalAlignment="Stretch"
-                              HorizontalContentAlignment="Stretch">
-            <!-- Content -->
-            <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}"
-                  CornerRadius="2"
-                  Padding="0">
-                <Frame x:Name="frameDetails"
-                       HorizontalAlignment="Stretch"
-                       VerticalAlignment="Stretch"
-                       Content="{x:Bind ViewModel.DetailsFrame, Mode=TwoWay}"/>
-
-                <!--<Grid.BackgroundTransition>
-                    <BrushTransition />
-                </Grid.BackgroundTransition>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                --><!-- Top bar --><!--
+        <controls:TwoPaneView Grid.Row="1"
+                              Grid.ColumnSpan="2"
+                              Pane1Length="360">
+            <controls:TwoPaneView.Pane1>
                 <Grid>
-                    <Button Style="{ThemeResource FluentDialogButtonBackStyle}" />
-                    <InkToolbar HorizontalAlignment="Center">
-                        <InkToolbarCustomToggleButton Content="&#xE708;"
-                                                      FontFamily="Segoe MDL2 Assets"/>
-                    </InkToolbar>
-                </Grid>
+                    <!-- Scanning in progress message -->
+                    <Grid Grid.Row="0"
+                          Grid.RowSpan="2"
+                          Canvas.ZIndex="500"
+                          Visibility="{x:Bind ViewModel.UIScanningInProgress, Mode=OneWay}"
+                          Background="{ThemeResource SystemControlAcrylicElementBrush}">
+                        <Grid.ChildrenTransitions>
+                            <TransitionCollection>
+                                <PopupThemeTransition />
+                            </TransitionCollection>
+                        </Grid.ChildrenTransitions>
+                        <StackPanel Orientation="Vertical"
+                                    HorizontalAlignment="Stretch"   
+                                    VerticalAlignment="Center">
+                            <controls:ProgressBar IsIndeterminate="True"
+                                                  HorizontalAlignment="Stretch"
+                                                  Margin="0,0,0,24"/>
+                            <TextBlock Text="Scanning..."
+                                       HorizontalAlignment="Center"
+                                       Style="{ThemeResource FluentTitleTextStyle}"/>
+                            <Button Content="Cancel"
+                                    HorizontalAlignment="Center"
+                                    Visibility="Collapsed"/>
+                        </StackPanel>
+                    </Grid>
 
-                --><!-- Scanned Image --><!--
-                <ctkc:DropShadowPanel Grid.Row="1"
-                              Grid.RowSpan="2"
-                              Grid.Column="1"
-                              Canvas.ZIndex="100"
-                              BlurRadius="10.0"
-                              ShadowOpacity="0.30"
-                                      Margin="8,0,8,8"
-                              Color="Black"
-                              OffsetX="4"
-                              OffsetY="4"                              
-                              HorizontalAlignment="Stretch"
-                              HorizontalContentAlignment="Stretch">
-                    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
-                          CornerRadius="2">
-                        <Image x:Name="imgScanned"
-                       Grid.Row="1"
-                       Source="{x:Bind ViewModel.ScannedImage, Mode=OneWay}"
-                       Margin="24"/>
+                    <!-- Scanner options -->
+                    <Grid Grid.Row="1">
+                        <!-- No scanner selected -->
 
-                        --><!-- Flying CommandBar --><!--
-                        <ctkc:DropShadowPanel Grid.Row="1"
-                                Canvas.ZIndex="100"
-                                 BlurRadius="10.0"
-                                 ShadowOpacity="0.30"
-                                 Color="Black"
-                                 OffsetX="4"
-                                 OffsetY="4"
-                                 Margin="12"
-                                 HorizontalAlignment="Right"
-                                 VerticalAlignment="Bottom">
+
+                        <!-- Scanner Options -->
+                        <StackPanel Orientation="Vertical"
+                                    Margin="24">
+                            <TextBlock Text="New scan"
+                                       Margin="0,0,0,12"
+                                       Style="{ThemeResource FluentHeaderTextStyle}" />
+                            <!-- Scanner -->
+                            <ComboBox x:Name="cmbxScanner"
+                                      Header="Scanner"
+                                      HorizontalAlignment="Stretch"
+                                      Margin="0,0,0,8"
+                                      ItemsSource="{x:Bind ViewModel.ScannerCollection, Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.SelectedDevice, Mode=TwoWay}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate x:DataType="enumeration:DeviceInformation">
+                                        <TextBlock Text="{x:Bind Name, Mode=OneWay}" />
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
+
+                            <!-- Scanner Source -->
+                            <ComboBox x:Name="cmbxScannerSource"
+                                      Header="Source"
+                                      HorizontalAlignment="Stretch"
+                                      Margin="0,0,0,8"
+                                      ItemsSource="{x:Bind ViewModel.ScannerSources,Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.SelectedScannerSource, Mode=TwoWay}" />
+
+                            <!-- Image format -->
+                            <ComboBox x:Name="cmbxImageFormat"
+                                      Header="ImageFormat"
+                                      HorizontalAlignment="Stretch"
+                                      Margin="0,0,0,8"
+                                      Visibility="Collapsed"
+                                      ItemsSource="{x:Bind ViewModel.ScannerFormats, Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.SelectedScannerFormat, Mode=TwoWay}" />
+
+                            <!-- Colour Mode -->
+                            <ComboBox x:Name="cmbxColourMode"
+                                      Header="Colour"
+                                      HorizontalAlignment="Stretch"
+                                      Margin="0,0,0,8"
+                                      Visibility="Collapsed"
+                                      ItemsSource="{x:Bind ViewModel.ScannerColourModes, Mode=OneWay}"
+                                      SelectedItem="{x:Bind ViewModel.SelectedScannerColourMode, Mode=TwoWay}" />
+
+                            <!-- Resolution (DPI) -->
+                            <controls:NumberBox x:Name="cmbxResolution"
+                                                Header="Resolution (DPI)"
+                                                Visibility="Collapsed"
+                                                SmallChange="10"
+                                                LargeChange="50"
+                                                SpinButtonPlacementMode="Inline" />
+
+                            <!-- #TODO Folder select -->
+                        </StackPanel>
+
+
+                        <!-- Flying CommandBar -->
+                        <ctkc:DropShadowPanel Canvas.ZIndex="100"
+                                              BlurRadius="10.0"
+                                              ShadowOpacity="0.30"
+                                              Color="Black"
+                                              OffsetX="4"
+                                              OffsetY="4"
+                                              Margin="24"
+                                              HorizontalAlignment="Right"
+                                              VerticalAlignment="Bottom">
                             <CommandBar DefaultLabelPosition="Right"
                                         CornerRadius="2"
                                         Style="{ThemeResource CommandBarRevealStyle}">
                                 <CommandBar.PrimaryCommands>
-                                    <AppBarButton Icon="Save"
-                                      Label="Save"
-                                      Background="{ThemeResource SystemControlBackgroundAccentBrush}"
-                                      Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
-                                      FontWeight="SemiBold"
-                                      CornerRadius="2"
-                                      ToolTipService.ToolTip="Save"
-                                                  Command="{x:Bind ViewModel.SaveEditedSaveCommand}"/>
-                                    <AppBarButton Icon="Copy"
-                                                  Visibility="Collapsed"
-                                                  Label="Copy"
-                                                  LabelPosition="Collapsed"
-                                                  ToolTipService.ToolTip="Copy" />
-                                    <AppBarButton Icon="Share"
-                                                  Visibility="Collapsed"
-                                                  Label="Share"
-                                                  LabelPosition="Collapsed"
-                                                  ToolTipService.ToolTip="Share"
-                                                  CornerRadius="0,2,2,0">
-                                        <AppBarButton.Flyout>
-                                            <MenuFlyout>
-                                                <MenuFlyoutItem Text="Send to email" >
-                                                    <MenuFlyoutItem.Icon>
-                                                        <FontIcon Glyph="&#xE89C;"/>
-                                                    </MenuFlyoutItem.Icon>
-                                                </MenuFlyoutItem>
-                                                <MenuFlyoutItem Text="Share with other apps"
-                                                                Icon="Share" />
-                                            </MenuFlyout>
-                                        </AppBarButton.Flyout>
-                                    </AppBarButton>
+                                    <AppBarButton Icon="Scan"
+                                                  Label="New scan"
+                                                  Background="{ThemeResource SystemControlBackgroundAccentBrush}"
+                                                  Foreground="{ThemeResource SystemControlForegroundChromeWhiteBrush}"
+                                                  FontWeight="SemiBold"
+                                                  CornerRadius="2,0,0,2"
+                                                  ToolTipService.ToolTip="New scan"
+                                                  IsEnabled="{x:Bind ViewModel.UIIsScannerSelected, Mode=OneWay}"
+                                                  Command="{x:Bind ViewModel.NewScanCommand}"/>
                                 </CommandBar.PrimaryCommands>
+                                <CommandBar.SecondaryCommands>
+                                    <AppBarButton Icon="Setting"
+                                                  Label="Settings"
+                                                  Command="{x:Bind ViewModel.SettingsCommand}"/>
+                                    <AppBarButton Label="About"
+                                                  Command="{x:Bind ViewModel.AboutCommand}">
+                                        <AppBarButton.Icon>
+                                            <FontIcon Glyph="&#xE946;"/>
+                                        </AppBarButton.Icon>
+                                    </AppBarButton>
+                                </CommandBar.SecondaryCommands>
                             </CommandBar>
                         </ctkc:DropShadowPanel>
+                        <!-- END OF Flying CommandBar-->
+
+
+
                     </Grid>
-                </ctkc:DropShadowPanel>-->
+                </Grid>
+            </controls:TwoPaneView.Pane1>
+
+            <controls:TwoPaneView.Pane2>
+                <!-- Document details -->
+                <!-- KEEP IN MIND! - Let the contents have at least 32px of padding, due to the titlebar! -->
+                <ctkc:DropShadowPanel Grid.Row="1"
+                                      Grid.RowSpan="2"
+                                      Grid.Column="1"
+                                      Canvas.ZIndex="100"
+                                      BlurRadius="10.0"
+                                      ShadowOpacity="0.30"
+                                      Color="Black"
+                                      OffsetX="4"
+                                      OffsetY="4"
+                                      Margin="8,0,8,8"
+                                      HorizontalAlignment="Stretch"
+                                      HorizontalContentAlignment="Stretch">
+                    <!-- Content -->
+                    <Grid Background="{ThemeResource SystemControlAcrylicElementBrush}"
+                          CornerRadius="2"
+                          Padding="0">
+                        <Frame x:Name="frameDetails"
+                               HorizontalAlignment="Stretch"
+                               VerticalAlignment="Stretch"
+                               Content="{x:Bind ViewModel.DetailsFrame, Mode=TwoWay}"/>
+                    </Grid>
+                </ctkc:DropShadowPanel>
+
+            </controls:TwoPaneView.Pane2>
+
+            
+        </controls:TwoPaneView>
 
 
-            </Grid>
-        </ctkc:DropShadowPanel>
+
+        
 
         
     </Grid>
